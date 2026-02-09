@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notaría 01 Sociedad Legal - Generador de Escrituras</title>
+    <meta name="description"
+        content="Sistema profesional para la generación de escrituras de constitución de Sociedades de Responsabilidad Limitada de Capital Variable">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>Notaría 01 Sociedad Legal</h1>
+                        <p>Generador de Escrituras S. de R.L. de C.V.</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="resetBtn" class="btn-secondary">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Reiniciar
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Progress Indicator -->
+            <div class="progress-container">
+                <div class="progress-steps">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Datos de la Sociedad</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Autorización</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Socios</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Aportaciones</div>
+                    </div>
+                    <div class="step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Administración</div>
+                    </div>
+                    <div class="step" data-step="6">
+                        <div class="step-number">6</div>
+                        <div class="step-label">Vista Previa</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Container -->
+            <div class="form-container">
+                <!-- Section 1: Datos Generales -->
+                <section class="form-section active" id="section1">
+                    <h2 class="section-title">Datos Generales de la Sociedad</h2>
+
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="denominacion">Denominación o Razón Social *</label>
+                            <input type="text" id="denominacion" placeholder="Ej: EJEMPLO SOCIEDAD">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipoSociedad">Tipo de Sociedad</label>
+                            <input type="text" id="tipoSociedad" value="S. de R.L. de C.V." readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="regimenCapital">Régimen de Capital</label>
+                            <input type="text" id="regimenCapital" value="Fijo y Variable" readonly>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaConstitucion">Fecha de Constitución</label>
+                            <input type="date" id="fechaConstitucion">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ciudad">Ciudad</label>
+                            <input type="text" id="ciudad" placeholder="Ej: Hermosillo">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estado">Estado</label>
+                            <input type="text" id="estado" placeholder="Ej: Sonora">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="domicilio">Domicilio Completo</label>
+                            <input type="text" id="domicilio" placeholder="Calle, número, colonia, código postal">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="duracion">Duración de la Sociedad</label>
+                            <select id="duracion">
+                                <option value="INDEFINIDA">Indefinida</option>
+                                <option value="AÑOS">Años específicos</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" id="duracionAniosGroup" style="display: none;">
+                            <label for="duracionAnios">Número de Años</label>
+                            <input type="number" id="duracionAnios" placeholder="Ej: 99">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="objetoSocial">Objeto Social Principal</label>
+                            <textarea id="objetoSocial" rows="3"
+                                placeholder="Descripción de la actividad principal de la sociedad"></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="actividadesSecundarias">Actividades Secundarias (opcional)</label>
+                            <textarea id="actividadesSecundarias" rows="2"
+                                placeholder="Actividades adicionales"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capitalFijo">Capital Mínimo Fijo ($)</label>
+                            <input type="number" id="capitalFijo" placeholder="Ej: 50000" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capitalVariable">Capital Variable ($)</label>
+                            <input type="number" id="capitalVariable" placeholder="Ej: 100000" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="valorParte">Valor de Cada Parte Social ($)</label>
+                            <input type="number" id="valorParte" placeholder="Ej: 1000" step="0.01">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="numeroPartes">Número Total de Partes Sociales</label>
+                            <input type="number" id="numeroPartes" placeholder="Ej: 50">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="formaAdministracion">Forma de Administración</label>
+                            <select id="formaAdministracion">
+                                <option value="GERENTE">Gerente</option>
+                                <option value="CONSEJO">Consejo de Gerentes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-primary" onclick="nextSection(2)">
+                            Continuar
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 2: Autorización -->
+                <section class="form-section" id="section2">
+                    <h2 class="section-title">Datos Notariales y Autorización</h2>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Datos de la Escritura</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="numeroEscritura">Número de Escritura Pública</label>
+                                <input type="text" id="numeroEscritura" placeholder="Ej: 12345">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="volumen">Volumen</label>
+                                <input type="text" id="volumen" placeholder="Ej: 147">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="nombreNotario">Nombre del Notario</label>
+                                <input type="text" id="nombreNotario" placeholder="Nombre completo del notario público">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Autorización de Uso de Denominación</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="denominacionAutorizada">Denominación Autorizada</label>
+                                <input type="text" id="denominacionAutorizada"
+                                    placeholder="Nombre autorizado por la Secretaría de Economía">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cud">Clave Única de Documento (CUD)</label>
+                                <input type="text" id="cud" placeholder="Ej: CUD-2025-XXXXX">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fechaExpedicion">Fecha de Expedición</label>
+                                <input type="date" id="fechaExpedicion">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="numeroHojas">Número de Hojas del Documento</label>
+                                <input type="number" id="numeroHojas" placeholder="Ej: 7">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="letraApendice">Letra de Apéndice Notarial</label>
+                                <input type="text" id="letraApendice" placeholder="Ej: B" maxlength="1">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="prevSection(1)">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextSection(3)">
+                            Continuar
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <section class="form-section" id="section3">
+                    <h2 class="section-title">Información de los Socios</h2>
+
+                    <div id="sociosContainer"></div>
+
+                    <div class="socios-controls">
+                        <button type="button" class="btn-add" onclick="addSocio()">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 4v16m8-8H4" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Agregar Socio
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="prevSection(2)">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextSection(4)">
+                            Continuar
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 4: Aportaciones -->
+                <section class="form-section" id="section4">
+                    <h2 class="section-title">Aportaciones de Capital</h2>
+
+                    <div id="aportacionesContainer"></div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="prevSection(3)">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextSection(5)">
+                            Continuar
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 5: Administración -->
+                <section class="form-section" id="section5">
+                    <h2 class="section-title">Administración y Vigilancia</h2>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Gerente</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="nombreGerente">Nombre Completo del Gerente</label>
+                                <input type="text" id="nombreGerente" placeholder="Nombre completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="gerenteSocio">¿Es socio o externo?</label>
+                                <select id="gerenteSocio">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="SOCIO">Socio</option>
+                                    <option value="EXTERNO">Externo</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nacionalidadGerente">Nacionalidad</label>
+                                <input type="text" id="nacionalidadGerente" placeholder="Ej: Mexicana">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="domicilioGerente">Domicilio</label>
+                                <input type="text" id="domicilioGerente" placeholder="Domicilio completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="eximeCaucion">¿Se le exime de caución?</label>
+                                <select id="eximeCaucion">
+                                    <option value="SI">Sí</option>
+                                    <option value="NO">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Apoderado Legal</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="nombreApoderado">Nombre Completo</label>
+                                <input type="text" id="nombreApoderado" placeholder="Nombre completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="nacionalidadApoderado">Nacionalidad</label>
+                                <input type="text" id="nacionalidadApoderado" placeholder="Ej: Mexicana">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="lugarNacimientoApoderado">Lugar de Nacimiento</label>
+                                <input type="text" id="lugarNacimientoApoderado" placeholder="Ciudad, Estado">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="fechaNacimientoApoderado">Fecha de Nacimiento</label>
+                                <input type="date" id="fechaNacimientoApoderado">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="estadoCivilApoderado">Estado Civil</label>
+                                <input type="text" id="estadoCivilApoderado" placeholder="Ej: Soltero/Casado">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="ocupacionApoderado">Ocupación</label>
+                                <input type="text" id="ocupacionApoderado" placeholder="Ej: Empresario">
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="domicilioApoderado">Domicilio</label>
+                                <input type="text" id="domicilioApoderado" placeholder="Domicilio completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="claveElectorApoderado">Clave de Elector (INE)</label>
+                                <input type="text" id="claveElectorApoderado" placeholder="Clave de elector">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="subsection">
+                        <h3 class="subsection-title">Comisario (Vigilancia)</h3>
+                        <div class="form-grid">
+                            <div class="form-group full-width">
+                                <label for="nombreComisario">Nombre Completo</label>
+                                <input type="text" id="nombreComisario" placeholder="Nombre completo">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="comisarioSocio">¿Es socio o externo?</label>
+                                <select id="comisarioSocio">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="SOCIO">Socio</option>
+                                    <option value="EXTERNO">Externo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="prevSection(4)">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="nextSection(6)">
+                            Ver Vista Previa
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Section 6: Vista Previa -->
+                <section class="form-section" id="section6">
+                    <h2 class="section-title">Vista Previa del Documento</h2>
+
+                    <div class="preview-container">
+                        <div class="preview-header">
+                            <p class="preview-note">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                                Los campos marcados con "XXXXX" están vacíos y deberán ser llenados manualmente después.
+                            </p>
+                        </div>
+                        <div id="previewContent" class="preview-content"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="prevSection(5)">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Anterior
+                        </button>
+                        <button type="button" class="btn-primary" onclick="generateDocument()">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                            Generar Documento .docx
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Notaría 01 Sociedad Legal. Sistema profesional de generación de escrituras.</p>
+            <p style="margin-top: 0.5rem; font-size: 0.875rem; opacity: 0.8;">Elaborado por FJMB 2026</p>
+        </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "sociedad-ejemplo-carlos-aguilar",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx vite build",
+    "preview": "npx vite preview"
+  },
+  "keywords": ["notaria", "escrituras", "legal", "mexico"],
+  "author": "",
+  "license": "ISC",
+  "description": "Sistema profesional para generación de escrituras de constitución de S. de R.L. de C.V.",
+  "dependencies": {
+    "docx": "^8.5.0",
+    "file-saver": "^2.0.5"
+  }
+}
