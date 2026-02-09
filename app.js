@@ -19,10 +19,16 @@ function initializeApp() {
     document.getElementById('fechaConstitucion').value = today;
 
     // Listener para duración
+    // Listener para duración
     document.getElementById('duracion').addEventListener('change', (e) => {
         const aniosGroup = document.getElementById('duracionAniosGroup');
         aniosGroup.style.display = e.target.value === 'AÑOS' ? 'block' : 'none';
     });
+
+    // Iniciar manejadores de administración
+    if (typeof setupAdminHandlers === 'function') {
+        setupAdminHandlers();
+    }
 }
 
 function setupEventListeners() {
@@ -32,6 +38,92 @@ function setupEventListeners() {
             location.reload();
         }
     });
+}
+
+function setupAdminHandlers() {
+    const setupHandler = (role) => {
+        const typeSelect = document.getElementById(`${role}Socio`); // gerenteSocio, apoderadoSocio
+        const socioSelect = document.getElementById(`selector${role.charAt(0).toUpperCase() + role.slice(1)}`); // selectorGerente
+        const container = document.getElementById(`containerSelector${role.charAt(0).toUpperCase() + role.slice(1)}`);
+
+        if (!typeSelect || !socioSelect) return;
+
+        typeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'SOCIO') {
+                if (container) container.style.display = 'block';
+                populateSociosSelect(socioSelect.id);
+            } else {
+                if (container) container.style.display = 'none';
+                socioSelect.value = "";
+            }
+        });
+
+        socioSelect.addEventListener('change', (e) => {
+            if (e.target.value !== "") {
+                fillSocioData(e.target.value, role);
+            }
+        });
+    };
+
+    setupHandler('gerente');
+    setupHandler('apoderado');
+}
+
+function populateSociosSelect(selectId) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    const currentValue = select.value;
+    select.innerHTML = '<option value="">-- Seleccione un Socio --</option>';
+
+    // Iterar sobre el array global de socios
+    if (typeof socios !== 'undefined' && Array.isArray(socios)) {
+        socios.forEach((socio) => {
+            // Obtenemos el nombre del input del DOM porque el array solo tiene estructura
+            const nombreInput = document.getElementById(`socio${socio.index}_nombre`);
+            const nombre = nombreInput ? nombreInput.value : `Socio ${socio.index + 1}`;
+
+            if (nombre && nombre.trim() !== '') {
+                const option = document.createElement('option');
+                option.value = socio.index;
+                option.textContent = nombre;
+                select.appendChild(option);
+            }
+        });
+    }
+
+    if (currentValue) select.value = currentValue;
+}
+
+function fillSocioData(socioIndex, role) {
+    // Helper para obtener valor de un campo del socio
+    const getSocioValue = (field) => {
+        const el = document.getElementById(`socio${socioIndex}_${field}`);
+        return el ? el.value : '';
+    };
+
+    // Helper para establecer valor en el campo destino
+    const setTargetValue = (targetId, val) => {
+        const el = document.getElementById(targetId);
+        if (el) el.value = val;
+    };
+
+    // Construir prefijo de ID
+    const suffix = role === 'gerente' ? 'Gerente' : 'Apoderado';
+
+    // Mapeo de campos comunes
+    setTargetValue(`nombre${suffix}`, getSocioValue('nombre'));
+    setTargetValue(`nacionalidad${suffix}`, getSocioValue('nacionalidad'));
+    setTargetValue(`domicilio${suffix}`, getSocioValue('domicilio'));
+
+    // Mapeo específico para Apoderado
+    if (role === 'apoderado') {
+        setTargetValue(`claveElector${suffix}`, getSocioValue('claveElector'));
+        setTargetValue(`lugarNacimiento${suffix}`, getSocioValue('lugarNacimiento'));
+        setTargetValue(`fechaNacimiento${suffix}`, getSocioValue('fechaNacimiento'));
+        setTargetValue(`estadoCivil${suffix}`, getSocioValue('estadoCivil'));
+        setTargetValue(`ocupacion${suffix}`, getSocioValue('ocupacion'));
+    }
 }
 
 // ===== NAVEGACIÓN ENTRE SECCIONES =====
@@ -47,6 +139,21 @@ window.nextSection = function (section) {
     // Si vamos a la sección de aportaciones, generar formulario
     if (section === 4) {
         generateAportacionesForm();
+    }
+
+    // Auto-completar Denominación Autorizada (Sección 2)
+    if (section === 2) {
+        const denominacion = document.getElementById('denominacion').value;
+        const auto = document.getElementById('denominacionAutorizada');
+        if (auto && !auto.value) { // Solo si está vacío para no sobrescribir cambios manuales
+            auto.value = denominacion;
+        }
+    }
+
+    // Si vamos a Administración (Sección 5), poblar selectores
+    if (section === 5) {
+        populateSociosSelect('selectorGerente');
+        populateSociosSelect('selectorApoderado');
     }
 
     // Si vamos a vista previa, generar preview

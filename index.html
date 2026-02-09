@@ -322,11 +322,6 @@
                     <div class="subsection">
                         <h3 class="subsection-title">Gerente</h3>
                         <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label for="nombreGerente">Nombre Completo del Gerente</label>
-                                <input type="text" id="nombreGerente" placeholder="Nombre completo">
-                            </div>
-
                             <div class="form-group">
                                 <label for="gerenteSocio">¿Es socio o externo?</label>
                                 <select id="gerenteSocio">
@@ -334,6 +329,18 @@
                                     <option value="SOCIO">Socio</option>
                                     <option value="EXTERNO">Externo</option>
                                 </select>
+                            </div>
+
+                            <div class="form-group full-width" id="containerSelectorGerente" style="display: none;">
+                                <label for="selectorGerente">Seleccionar Socio (Gerente)</label>
+                                <select id="selectorGerente">
+                                    <option value="">-- Seleccione un Socio --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label for="nombreGerente">Nombre Completo del Gerente</label>
+                                <input type="text" id="nombreGerente" placeholder="Nombre completo">
                             </div>
 
                             <div class="form-group">
@@ -359,6 +366,24 @@
                     <div class="subsection">
                         <h3 class="subsection-title">Apoderado Legal</h3>
                         <div class="form-grid">
+                            <!-- Selector de Socio para Apoderado -->
+                            <div class="form-group">
+                                <label for="apoderadoSocio">¿Es socio o externo?</label>
+                                <select id="apoderadoSocio">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="SOCIO">Socio</option>
+                                    <option value="EXTERNO">Externo</option>
+                                </select>
+                            </div>
+
+                            <!-- Selectores ocultos para elegir el socio específico -->
+                            <div class="form-group full-width" id="containerSelectorApoderado" style="display: none;">
+                                <label for="selectorApoderado">Seleccionar Socio (Apoderado)</label>
+                                <select id="selectorApoderado">
+                                    <option value="">-- Seleccione un Socio --</option>
+                                </select>
+                            </div>
+
                             <div class="form-group full-width">
                                 <label for="nombreApoderado">Nombre Completo</label>
                                 <input type="text" id="nombreApoderado" placeholder="Nombre completo">
@@ -398,6 +423,7 @@
                                 <label for="claveElectorApoderado">Clave de Elector (INE)</label>
                                 <input type="text" id="claveElectorApoderado" placeholder="Clave de elector">
                             </div>
+
                         </div>
                     </div>
 
