@@ -519,6 +519,23 @@
         </footer>
     </div>
 
+    <!-- Modal de Historial -->
+    <div id="historyModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-history"></i> Historial de Documentos</h3>
+                <span class="close" onclick="closeHistory()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Aquí puedes recuperar los datos de sesiones anteriores. Se guardan automáticamente al generar la vista previa.</p>
+                <div id="historyList" class="history-list">
+                    <!-- Los items se cargarán dinámicamente -->
+                    <p class="empty-msg">No hay historial guardado todavía.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="app.js"></script>
 </body>
 

@@ -436,6 +436,9 @@ window.calculateParticipation = function () {
 function generatePreview() {
     const preview = document.getElementById('previewContent');
     const data = collectAllData();
+    
+    // Guardar en historial automáticamente
+    saveToHistory(data);
 
     // Helper para resaltar datos o mostrar advertencia si falta
     const hl = (val) => {
@@ -1933,5 +1936,157 @@ function generateAportacionesWord(data) {
     });
 
     return paragraphs;
+}
+
+// ===========================
+// SISTEMA DE HISTORIAL (LOCALSTORAGE)
+// ===========================
+window.showHistory = function() {
+    const modal = document.getElementById('historyModal');
+    modal.style.display = 'flex';
+    renderHistory();
+};
+
+window.closeHistory = function() {
+    document.getElementById('historyModal').style.display = 'none';
+};
+
+function saveToHistory(data) {
+    let history = JSON.parse(localStorage.getItem('sociedad_history') || '[]');
+    
+    const now = new Date();
+    const historyItem = {
+        id: Date.now(),
+        date: now.toLocaleString('es-MX'),
+        denominacion: data.denominacion || 'Sin nombre',
+        data: data
+    };
+
+    if (history.length > 0 && history[0].denominacion === historyItem.denominacion) {
+        history[0] = historyItem;
+    } else {
+        history.unshift(historyItem);
+    }
+
+    if (history.length > 10) history.pop();
+    localStorage.setItem('sociedad_history', JSON.stringify(history));
+}
+
+function renderHistory() {
+    const list = document.getElementById('historyList');
+    if (!list) return;
+
+    const history = JSON.parse(localStorage.getItem('sociedad_history') || '[]');
+    
+    if (history.length === 0) {
+        list.innerHTML = '<p class="empty-msg">No hay historial guardado todavía.</p>';
+        return;
+    }
+
+    list.innerHTML = history.map((item, index) => `
+        <div class="history-item">
+            <div class="history-info">
+                <span class="history-name">${item.denominacion}</span>
+                <span class="history-date">${item.date}</span>
+            </div>
+            <div class="history-actions">
+                <button class="btn-load" onclick="loadFromHistory(${index})">
+                    <i class="fas fa-file-import"></i> Cargar
+                </button>
+                <button class="btn-delete" onclick="deleteHistoryItem(${index})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        </div>
+    `).join('');
+}
+
+window.deleteHistoryItem = function(index) {
+    if (confirm('¿Eliminar este registro del historial?')) {
+        let history = JSON.parse(localStorage.getItem('sociedad_history') || '[]');
+        history.splice(index, 1);
+        localStorage.setItem('sociedad_history', JSON.stringify(history));
+        renderHistory();
+    }
+};
+
+window.loadFromHistory = function(index) {
+    const history = JSON.parse(localStorage.getItem('sociedad_history') || '[]');
+    const item = history[index];
+    if (!item) return;
+
+    if (confirm('¿Deseas cargar los datos de "' + item.denominacion + '"? Esto reemplazará lo que hayas escrito ahora.')) {
+        const data = item.data;
+        
+        document.getElementById('sociosContainer').innerHTML = '';
+        socios = [];
+        socioIndex = 0;
+
+        const setVal = (id, val) => {
+            const el = document.getElementById(id);
+            if (el && val !== undefined && val !== 'XXXXX' && val !== 'XXX') {
+                el.value = val;
+                formData[id] = val;
+            }
+        };
+
+        setVal('denominacion', data.denominacion);
+        setVal('ciudad', data.ciudad);
+        setVal('estado', data.estado);
+        setVal('domicilio', data.domicilio);
+        if (data.duracion) setVal('duracionAnios', data.duracion.match(/\d+/)?.[0] || '');
+        setVal('objetoSocial', data.objetoSocial);
+        setVal('actividadesSecundarias', data.actividadesSecundarias);
+        setVal('capitalFijo', data.capitalFijo);
+        setVal('capitalVariable', data.capitalVariable);
+        setVal('valorParte', data.valorParte);
+        setVal('numeroPartes', data.numeroPartes);
+        setVal('nombreNotario', data.notario);
+        setVal('numeroEscritura', data.numeroEscritura);
+        setVal('volumen', data.volumen);
+        setVal('denominacionAutorizada', data.denominacionAutorizada);
+        setVal('cud', data.cud);
+        setVal('fechaExpedicion', data.fechaExpedicion);
+        setVal('numeroHojas', data.numeroHojas);
+        setVal('letraApendice', data.letraApendice);
+        setVal('nombreGerente', data.nombreGerente);
+        setVal('nacionalidadGerente', data.nacionalidadGerente);
+        setVal('domicilioGerente', data.domicilioGerente);
+        setVal('nombreApoderado', data.nombreApoderado);
+        setVal('nacionalidadApoderado', data.nacionalidadApoderado);
+        setVal('domicilioApoderado', data.domicilioApoderado);
+        setVal('nombreComisario', data.nombreComisario);
+
+        if (data.socios && Array.isArray(data.socios)) {
+            data.socios.forEach(s => {
+                addSocio(); 
+                const currentIdx = socioIndex - 1;
+                setVal(`socio${currentIdx}_nombre`, s.nombre);
+                setVal(`socio${currentIdx}_nacionalidad`, s.nacionalidad);
+                setVal(`socio${currentIdx}_domicilio`, s.domicilio);
+                setVal(`socio${currentIdx}_rfc`, s.rfc);
+                setVal(`socio${currentIdx}_curp`, s.curp);
+                setVal(`socio${currentIdx}_lugarNacimiento`, s.lugarNacimiento);
+                setVal(`socio${currentIdx}_fechaNacimiento`, s.fechaNacimiento);
+                setVal(`socio${currentIdx}_estadoCivil`, s.estadoCivil);
+                setVal(`socio${currentIdx}_ocupacion`, s.ocupacion);
+                setVal(`socio${currentIdx}_claveElector`, s.claveElector);
+            });
+        }
+
+        currentSection = 1;
+        showSection(1);
+        updateProgress();
+        closeHistory();
+        
+        alert('Datos cargados con éxito.');
+    }
+};
+
+window.onclick = function(event) {
+    const modalHist = document.getElementById('historyModal');
+    const modalPrev = document.getElementById('modalPreview');
+    if (event.target == modalHist) modalHist.style.display = "none";
+    if (event.target == modalPrev) modalPrev.style.display = "none";
 }
 
