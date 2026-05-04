@@ -427,7 +427,10 @@ window.calculateParticipation = function () {
     // Actualizar resumen
     document.getElementById('totalMonto').textContent = `$${totalMonto.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`;
     document.getElementById('totalPartes').textContent = totalPartes;
-    document.getElementById('totalPorc// ===========================
+    document.getElementById('totalPorcentaje').textContent = '100.00%';
+}
+
+// ===========================
 // VISTA PREVIA DEL DOCUMENTO
 // ===========================
 function generatePreview() {
