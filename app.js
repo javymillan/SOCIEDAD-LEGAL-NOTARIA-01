@@ -2018,9 +2018,10 @@ window.loadFromHistory = function(index) {
     if (confirm('¿Deseas cargar los datos de "' + item.denominacion + '"? Esto reemplazará lo que hayas escrito ahora.')) {
         const data = item.data;
         
+        // 1. Limpiar socios actuales y resetear contadores
         document.getElementById('sociosContainer').innerHTML = '';
         socios = [];
-        socioIndex = 0;
+        socioCounter = 0; // REESTABLECER EL CONTADOR GLOBAL
 
         const setVal = (id, val) => {
             const el = document.getElementById(id);
@@ -2030,6 +2031,7 @@ window.loadFromHistory = function(index) {
             }
         };
 
+        // 2. Poblar campos de la sociedad
         setVal('denominacion', data.denominacion);
         setVal('ciudad', data.ciudad);
         setVal('estado', data.estado);
@@ -2057,10 +2059,14 @@ window.loadFromHistory = function(index) {
         setVal('domicilioApoderado', data.domicilioApoderado);
         setVal('nombreComisario', data.nombreComisario);
 
+        // 3. Recrear socios uno por uno
         if (data.socios && Array.isArray(data.socios)) {
-            data.socios.forEach(s => {
-                addSocio(); 
-                const currentIdx = socioIndex - 1;
+            data.socios.forEach((s, idx) => {
+                addSocio(); // Esto usa socioCounter y lo incrementa
+                
+                // Ahora que la card existe, llenamos sus campos
+                // addSocio() incrementó socioCounter, por lo que el índice usado fue socioCounter - 1
+                const currentIdx = idx; 
                 setVal(`socio${currentIdx}_nombre`, s.nombre);
                 setVal(`socio${currentIdx}_nacionalidad`, s.nacionalidad);
                 setVal(`socio${currentIdx}_domicilio`, s.domicilio);
@@ -2074,9 +2080,9 @@ window.loadFromHistory = function(index) {
             });
         }
 
+        // 4. Volver al inicio y cerrar
         currentSection = 1;
-        showSection(1);
-        updateProgress();
+        navigateToSection(1); // Usar navigateToSection para asegurar que se actualicen las clases de steps
         closeHistory();
         
         alert('Datos cargados con éxito.');
