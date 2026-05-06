@@ -94,7 +94,7 @@ function numeroALetras(num) {
     if (isCurrency) {
         const centavos = Math.round((number - Math.floor(number)) * 100);
         const centavosStr = centavos.toString().padStart(2, '0');
-        return \`\${result} pesos \${centavosStr}/100 M.N.\`;
+        return `${result} pesos ${centavosStr}/100 M.N.`;
     }
     
     return result;
@@ -103,11 +103,11 @@ function numeroALetras(num) {
 function formatearConLetra(valor, isCurrency = false) {
     if (!valor || valor === 'XXXXX' || valor === 'XXX') return valor;
     if (isCurrency) {
-        return \`$\${parseFloat(valor).toLocaleString('en-US', {minimumFractionDigits: 2})} (\${numeroALetras(valor)})\`;
+        return `$${parseFloat(valor).toLocaleString('en-US', {minimumFractionDigits: 2})} (${numeroALetras(valor)})`;
     }
     const num = parseFloat(valor);
     if (!isNaN(num)) {
-        return \`\${valor} (\${numeroALetras(num)})\`;
+        return `${valor} (${numeroALetras(num)})`;
     }
     return valor;
 }
