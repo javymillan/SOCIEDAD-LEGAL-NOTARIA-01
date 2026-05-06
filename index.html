@@ -111,30 +111,17 @@
 
                         <div class="form-group">
                             <label for="ciudad">Ciudad</label>
-                            <input type="text" id="ciudad" placeholder="Ej: Hermosillo">
+                            <input type="text" id="ciudad" value="Hermosillo">
                         </div>
 
                         <div class="form-group">
                             <label for="estado">Estado</label>
-                            <input type="text" id="estado" placeholder="Ej: Sonora">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="domicilio">Domicilio Completo</label>
-                            <input type="text" id="domicilio" placeholder="Calle, número, colonia, código postal">
+                            <input type="text" id="estado" value="Sonora">
                         </div>
 
                         <div class="form-group">
                             <label for="duracion">Duración de la Sociedad</label>
-                            <select id="duracion">
-                                <option value="INDEFINIDA">Indefinida</option>
-                                <option value="AÑOS">Años específicos</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" id="duracionAniosGroup" style="display: none;">
-                            <label for="duracionAnios">Número de Años</label>
-                            <input type="number" id="duracionAnios" placeholder="Ej: 99">
+                            <input type="text" id="duracion" value="INDEFINIDA" readonly>
                         </div>
 
                         <div class="form-group full-width">
@@ -143,25 +130,14 @@
                                 placeholder="Descripción de la actividad principal de la sociedad"></textarea>
                         </div>
 
-                        <div class="form-group full-width">
-                            <label for="actividadesSecundarias">Actividades Secundarias (opcional)</label>
-                            <textarea id="actividadesSecundarias" rows="2"
-                                placeholder="Actividades adicionales"></textarea>
-                        </div>
-
                         <div class="form-group">
                             <label for="capitalFijo">Capital Mínimo Fijo ($)</label>
                             <input type="number" id="capitalFijo" placeholder="Ej: 50000" step="0.01">
                         </div>
 
                         <div class="form-group">
-                            <label for="capitalVariable">Capital Variable ($)</label>
-                            <input type="number" id="capitalVariable" placeholder="Ej: 100000" step="0.01">
-                        </div>
-
-                        <div class="form-group">
                             <label for="valorParte">Valor de Cada Parte Social ($)</label>
-                            <input type="number" id="valorParte" placeholder="Ej: 1000" step="0.01">
+                            <input type="number" id="valorParte" value="1000" step="0.01">
                         </div>
 
                         <div class="form-group">
@@ -208,7 +184,12 @@
 
                             <div class="form-group full-width">
                                 <label for="nombreNotario">Nombre del Notario</label>
-                                <input type="text" id="nombreNotario" placeholder="Nombre completo del notario público">
+                                <select id="nombreNotario">
+                                    <option value="">Seleccione un notario</option>
+                                    <option value="LIC. JUAN PÉREZ GARCÍA">LIC. JUAN PÉREZ GARCÍA</option>
+                                    <option value="LIC. MARÍA FERNÁNDEZ LÓPEZ">LIC. MARÍA FERNÁNDEZ LÓPEZ</option>
+                                    <option value="LIC. CARLOS AGUILAR">LIC. CARLOS AGUILAR</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -359,10 +340,7 @@
 
                             <div class="form-group">
                                 <label for="eximeCaucion">¿Se le exime de caución?</label>
-                                <select id="eximeCaucion">
-                                    <option value="SI">Sí</option>
-                                    <option value="NO">No</option>
-                                </select>
+                                <input type="text" id="eximeCaucion" value="SI" readonly>
                             </div>
                         </div>
                     </div>
@@ -393,67 +371,20 @@
                                 <input type="text" id="nombreApoderado" placeholder="Nombre completo">
                             </div>
 
-                            <div class="form-group">
-                                <label for="nacionalidadApoderado">Nacionalidad</label>
-                                <input type="text" id="nacionalidadApoderado" placeholder="Ej: Mexicana">
+                            <div class="form-group full-width" style="grid-column: span 2;">
+                                <label>Facultades del Apoderado (Seleccione las aplicables)</label>
+                                <div class="checkbox-group" style="display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="A"> A) PODER GENERAL PARA PLEITOS Y COBRANZAS</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="B"> B) PODER GENERAL PARA ACTOS DE ADMINISTRACIÓN</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="C"> C) PODER LABORAL</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="D"> D) PODER GENERAL</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="E"> E) PODER GENERAL PARA ACTOS DE DOMINIO</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="F"> F) PODER PARA SUSCRIBIR TÍTULOS Y OPERACIONES DE CRÉDITO</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="G"> G) PODER CAMBIARIO</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="H"> H) FACULTADES PARA CONFERIR PODERES</label>
+                                    <label style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" name="facultades" value="I"> I) FACULTADES GENERALES</label>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="lugarNacimientoApoderado">Lugar de Nacimiento</label>
-                                <input type="text" id="lugarNacimientoApoderado" placeholder="Ciudad, Estado">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="fechaNacimientoApoderado">Fecha de Nacimiento</label>
-                                <input type="date" id="fechaNacimientoApoderado">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="estadoCivilApoderado">Estado Civil</label>
-                                <input type="text" id="estadoCivilApoderado" placeholder="Ej: Soltero/Casado">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="ocupacionApoderado">Ocupación</label>
-                                <input type="text" id="ocupacionApoderado" placeholder="Ej: Empresario">
-                            </div>
-
-                            <div class="form-group full-width">
-                                <label for="domicilioApoderado">Domicilio</label>
-                                <input type="text" id="domicilioApoderado" placeholder="Domicilio completo">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="claveElectorApoderado">Clave de Elector (INE)</label>
-                                <input type="text" id="claveElectorApoderado" placeholder="Clave de elector">
-                            </div>
-
-                        </div>
-                    </div>
-
-                    <div class="subsection">
-                        <h3 class="subsection-title">Comisario (Vigilancia)</h3>
-                        <div class="form-grid">
-                            <div class="form-group full-width">
-                                <label for="nombreComisario">Nombre Completo</label>
-                                <input type="text" id="nombreComisario" placeholder="Nombre completo">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="comisarioSocio">¿Es socio o externo?</label>
-                                <select id="comisarioSocio">
-                                     <option value="">Seleccionar...</option>
-                                     <option value="SOCIO">Socio</option>
-                                     <option value="EXTERNO">Externo</option>
-                                 </select>
-                             </div>
-
-                             <div class="form-group full-width" id="containerSelectorComisario" style="display: none;">
-                                 <label for="selectorComisario">Seleccionar Socio (Comisario)</label>
-                                 <select id="selectorComisario">
-                                     <option value="">-- Seleccione un Socio --</option>
-                                 </select>
-                             </div>
                         </div>
                     </div>
 

@@ -32,12 +32,100 @@ function initializeApp() {
     }
 }
 
+// ===== FUNCIONES AUXILIARES =====
+function numeroALetras(num) {
+    if (num === null || isNaN(num) || num === undefined) return '';
+    const isCurrency = String(num).includes('.') || typeof num === 'string' && num.includes('$');
+    const number = parseFloat(String(num).replace(/[^0-9.]/g, ''));
+    if (isNaN(number)) return '';
+
+    const unidades = ['cero', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
+    const decenas = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
+    const decenas2 = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
+    const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
+
+    function convertirGrupo(n) {
+        if (n === 100) return 'cien';
+        let texto = '';
+        const c = Math.floor(n / 100);
+        const r = n % 100;
+        if (c > 0) texto += centenas[c] + ' ';
+        if (r > 0) {
+            if (r < 10) texto += unidades[r];
+            else if (r < 20) texto += decenas[r - 10];
+            else {
+                const d = Math.floor(r / 10);
+                const u = r % 10;
+                if (r === 20) texto += 'veinte';
+                else if (d === 2) texto += 'veinti' + unidades[u];
+                else {
+                    texto += decenas2[d];
+                    if (u > 0) texto += ' y ' + unidades[u];
+                }
+            }
+        }
+        return texto.trim();
+    }
+
+    let intPart = Math.floor(number);
+    let result = '';
+    
+    if (intPart === 0) {
+        result = 'cero';
+    } else {
+        const millones = Math.floor(intPart / 1000000);
+        intPart = intPart % 1000000;
+        const miles = Math.floor(intPart / 1000);
+        const resto = intPart % 1000;
+
+        if (millones > 0) {
+            result += millones === 1 ? 'un millón ' : convertirGrupo(millones) + ' millones ';
+        }
+        if (miles > 0) {
+            result += miles === 1 ? 'mil ' : convertirGrupo(miles) + ' mil ';
+        }
+        if (resto > 0) {
+            result += convertirGrupo(resto);
+        }
+    }
+
+    result = result.trim();
+
+    if (isCurrency) {
+        const centavos = Math.round((number - Math.floor(number)) * 100);
+        const centavosStr = centavos.toString().padStart(2, '0');
+        return \`\${result} pesos \${centavosStr}/100 M.N.\`;
+    }
+    
+    return result;
+}
+
+function formatearConLetra(valor, isCurrency = false) {
+    if (!valor || valor === 'XXXXX' || valor === 'XXX') return valor;
+    if (isCurrency) {
+        return \`$\${parseFloat(valor).toLocaleString('en-US', {minimumFractionDigits: 2})} (\${numeroALetras(valor)})\`;
+    }
+    const num = parseFloat(valor);
+    if (!isNaN(num)) {
+        return \`\${valor} (\${numeroALetras(num)})\`;
+    }
+    return valor;
+}
+
 function setupEventListeners() {
     // Reset button
     document.getElementById('resetBtn').addEventListener('click', () => {
         if (confirm('¿Está seguro de que desea reiniciar el formulario? Se perderán todos los datos.')) {
             location.reload();
         }
+    });
+
+    // Make steps clickable
+    document.querySelectorAll('.step').forEach((step, index) => {
+        step.style.cursor = 'pointer';
+        step.addEventListener('click', () => {
+            navigateToSection(index + 1);
+        });
     });
 }
 
@@ -264,7 +352,7 @@ function createSocioCard(index) {
             
             <div class="form-group">
                 <label for="socio${index}_nacionalidad">Nacionalidad</label>
-                <input type="text" id="socio${index}_nacionalidad" placeholder="Ej: Mexicana">
+                <input type="text" id="socio${index}_nacionalidad" value="Mexicana" readonly>
             </div>
             
             <div class="form-group">
@@ -287,39 +375,29 @@ function createSocioCard(index) {
                 <input type="text" id="socio${index}_ocupacion" placeholder="Ej: Empresario">
             </div>
             
-            <div class="form-group">
-                <label for="socio${index}_rfc">RFC</label>
-                <input type="text" id="socio${index}_rfc" placeholder="RFC con homoclave">
-            </div>
-            
-            <div class="form-group">
-                <label for="socio${index}_curp">CURP</label>
-                <input type="text" id="socio${index}_curp" placeholder="CURP">
-            </div>
-            
             <div class="form-group full-width">
                 <label for="socio${index}_domicilio">Domicilio Completo</label>
                 <input type="text" id="socio${index}_domicilio" placeholder="Calle, número, colonia, código postal">
             </div>
             
             <div class="form-group">
-                <label for="socio${index}_telefono">Teléfono</label>
-                <input type="tel" id="socio${index}_telefono" placeholder="Teléfono de contacto">
+                <label for="socio${index}_identificacionTipo">Tipo de Identificación</label>
+                <select id="socio${index}_identificacionTipo">
+                    <option value="INE">INE</option>
+                    <option value="PASAPORTE">Pasaporte</option>
+                    <option value="LICENCIA DE CONDUCIR">Licencia de Conducir</option>
+                    <option value="OTRO">Otro</option>
+                </select>
             </div>
             
             <div class="form-group">
-                <label for="socio${index}_correo">Correo Electrónico</label>
-                <input type="email" id="socio${index}_correo" placeholder="correo@ejemplo.com">
-            </div>
-            
-            <div class="form-group">
-                <label for="socio${index}_claveElector">Clave de Elector (INE)</label>
-                <input type="text" id="socio${index}_claveElector" placeholder="Clave de elector">
+                <label for="socio${index}_claveElector">Número de Identificación</label>
+                <input type="text" id="socio${index}_claveElector" placeholder="Clave/Número">
             </div>
             
             <div class="form-group">
                 <label for="socio${index}_institutoExpide">Instituto que Expide</label>
-                <input type="text" id="socio${index}_institutoExpide" placeholder="Ej: INE">
+                <input type="text" id="socio${index}_institutoExpide" placeholder="Ej: INE, SRE">
             </div>
         </div>
     `;
@@ -370,7 +448,7 @@ function generateAportacionesForm() {
                 
                 <div class="form-group">
                     <label for="aportacion${socio.index}_partes">Número de Partes Sociales</label>
-                    <input type="number" id="aportacion${socio.index}_partes" placeholder="0" onchange="calculateParticipation()" value="${prevPartes}">
+                    <input type="number" id="aportacion${socio.index}_partes" value="1" onchange="calculateParticipation()" readonly>
                 </div>
                 
                 <div class="form-group">
@@ -448,9 +526,7 @@ function generatePreview() {
         return `<span class="highlight-data">${val}</span>`;
     };
 
-    const sociosHl = data.socios.map(s => {
-        return `${hl(s.nombre)}, de nacionalidad ${hl(s.nacionalidad)}, nacido en ${hl(s.lugarNacimiento)}, el día ${hl(s.fechaNacimiento)}, de estado civil ${hl(s.estadoCivil)}, de ocupación ${hl(s.ocupacion)}, con Registro Federal de Contribuyentes ${hl(s.rfc)}, con CURP ${hl(s.curp)} y con domicilio en ${hl(s.domicilio)}`;
-    }).join('; ');
+    const sociosHl = data.sociosDescripcion;
 
     preview.innerHTML = `
         <div class="preview-header-info" style="background: var(--primary-50); border: 2px solid var(--primary-200); padding: 1.5rem; border-radius: 1rem; margin-bottom: 2rem; box-shadow: var(--shadow-md);">
@@ -471,13 +547,13 @@ function generatePreview() {
             </div>
         </div>
 
-        <div class="document-preview-paper">
+        <div class="document-preview-paper" contenteditable="true">
             <h3 style="text-align: center;">ESCRITURA PÚBLICA NÚMERO ${hl(data.numeroEscritura)}</h3>
             <h3 style="text-align: center;">VOLUMEN ${hl(data.volumen)}</h3>
             
             <p>En la Ciudad de ${hl(data.ciudad)}, ${hl(data.estado)}, México, a los ${hl(data.dia)} días del mes de ${hl(data.mes)} del año ${hl(data.anio)}, ante mí, ${hl(data.notario)}, con ejercicio y residencia en esta Demarcación Notarial, COMPARECIERON:</p>
             
-            <p>Los señores ${sociosHl}, todos por su propio derecho y quienes dijeron:</p>
+            <p>Los señores ${hl(data.sociosNombres)}, todos por su propio derecho y quienes dijeron:</p>
             
             <p>Que vienen a constituir y constituyen una "SOCIEDAD DE RESPONSABILIDAD LIMITADA DE CAPITAL VARIABLE", conforme a la Ley General de Sociedades Mercantiles y en base a los siguientes:</p>
             
@@ -500,7 +576,6 @@ function generatePreview() {
             
             <p>ARTÍCULO CUARTO.- OBJETO.- La Sociedad tendrá por objeto:</p>
             <p>1.- ${hl(data.objetoSocial)}</p>
-            ${data.actividadesSecundarias && data.actividadesSecundarias !== 'XXXXX' ? `<p>2.- ${hl(data.actividadesSecundarias)}</p>` : ''}
             
             <p>En relación y para la consecución de dichos fines, la sociedad podrá realizar cualquiera de los siguientes actos:</p>
             <p style="font-size: 0.9rem; color: var(--gray-600); font-style: italic;">(Las facultades legales completas aparecerán en el documento final generado de la a) a la o)...)</p>
@@ -511,7 +586,7 @@ function generatePreview() {
             
             <h3 style="text-align: center;">CAPITAL SOCIAL Y PARTES SOCIALES</h3>
             
-            <p>ARTÍCULO SÉPTIMO. El capital social es variable. El capital mínimo fijo sin derecho a retiro es de $${hl(formatCurrency(data.capitalFijo))}, el cual estará representado por partes sociales, nominativas, íntegramente suscritas y pagadas.</p>
+            <p>ARTÍCULO SÉPTIMO. El capital social es variable. El capital mínimo fijo sin derecho a retiro es de ${hl(data.capitalFijo)}, el cual estará representado por partes sociales, nominativas, íntegramente suscritas y pagadas.</p>
             
             <p>ARTÍCULO OCTAVO. Los socios no podrán ser titulares de más de una parte social...</p>
             
@@ -524,25 +599,22 @@ function generatePreview() {
             <h3 style="text-align: center;">ARTÍCULOS TRANSITORIOS</h3>
             
             <p>Los socios reunidos en Asamblea General de Socios, aprueban por unanimidad las siguientes resoluciones:</p>
-            <p>PRIMERO. La parte mínima fija del capital social se constituye por la cantidad de $${hl(formatCurrency(data.capitalFijo))}, conforme a lo siguiente:</p>
+            <p>PRIMERO. La parte mínima fija del capital social se constituye por la cantidad de ${hl(data.capitalFijo)}, conforme a lo siguiente:</p>
             
             ${generateAportacionesPreview(data, true)}
             
             <p>Los comparecientes declaran, bajo formal protesta de decir verdad, que con anterioridad a la fecha de esta escritura pagaron en efectivo la totalidad de sus participaciones.</p>
             <p>SEGUNDO. Los socios acuerdan que la Sociedad se administre por un GERENTE, y para ocupar ese cargo nombran a ${hl(data.nombreGerente)}, a quien se le otorgan los poderes y facultades que se establecen en el artículo trigésimo primero de los estatutos sociales. ${data.eximeCaucion === 'SI' ? hl('Se exime al Gerente de la obligación de caucionar su gestión.') : hl('El Gerente deberá caucionar su gestión.')}</p>
-            <p>TERCERO. Los socios acuerdan nombrar como APODERADO LEGAL a ${hl(data.nombreApoderado)}.</p>
-            <p>CUARTO. Los socios acuerdan nombrar como COMISARIO a ${hl(data.nombreComisario)}.</p>
+            <p>TERCERO. Los socios acuerdan nombrar como APODERADO LEGAL a ${hl(data.nombreApoderado)}. Facultades otorgadas: ${hl(data.facultadesApoderado.join(', '))}</p>
             
             <h3 style="text-align: center;">GENERALES</h3>
             
+            <p>${hl(data.sociosDescripcion)}</p>
+
             <p>EL SEÑOR ${hl(data.nombreApoderado)}, quien dijo ser de nacionalidad ${hl(data.nacionalidadApoderado)}, haber nacido en ${hl(data.lugarNacimientoApoderado)}, el día ${hl(data.fechaNacimientoApoderado)}, de estado civil ${hl(data.estadoCivilApoderado)}, de ocupación ${hl(data.ocupacionApoderado)} y con domicilio en ${hl(data.domicilioApoderado)}, quien se identificó con credencial para votar con fotografía con clave de elector número ${hl(data.claveElectorApoderado)}.</p>
             
             ${data.gerenteSocio === 'EXTERNO' ? `
             <p>EL SEÑOR ${hl(data.nombreGerente)}, de nacionalidad ${hl(data.nacionalidadGerente)}, con domicilio en ${hl(data.domicilioGerente)}, quien desempeña el cargo de GERENTE de la sociedad.</p>
-            ` : ''}
-
-            ${data.comisarioSocio === 'EXTERNO' ? `
-            <p>EL SEÑOR ${hl(data.nombreComisario)}, quien desempeña el cargo de COMISARIO de la sociedad.</p>
             ` : ''}
             
             <h3 style="text-align: center;">EL SUSCRITO NOTARIO CERTIFICA:</h3>
@@ -588,7 +660,7 @@ function generateAportacionesPreview(data, highlight = false) {
     };
 
     sociosData.forEach(socio => {
-        const montoFormateado = '$' + formatCurrency(socio.aportacion);
+        const montoFormateado = socio.aportacionLetra;
         const porcentajeFormateado = (socio.porcentaje || '0.00') + '%';
         
         html += `<tr>
@@ -618,61 +690,70 @@ function collectAllData() {
     const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
     // Recolectar datos detallados de socios
-    const sociosData = socios.map(s => ({
-        index: s.index,
-        nombre: getValue(`socio${s.index}_nombre`),
-        nacionalidad: getValue(`socio${s.index}_nacionalidad`),
-        lugarNacimiento: getValue(`socio${s.index}_lugarNacimiento`),
-        fechaNacimiento: getValue(`socio${s.index}_fechaNacimiento`),
-        estadoCivil: getValue(`socio${s.index}_estadoCivil`),
-        ocupacion: getValue(`socio${s.index}_ocupacion`),
-        rfc: getValue(`socio${s.index}_rfc`),
-        curp: getValue(`socio${s.index}_curp`),
-        domicilio: getValue(`socio${s.index}_domicilio`),
-        aportacion: getValue(`aportacion${s.index}_monto`),
-        partes: getValue(`aportacion${s.index}_partes`),
-        porcentaje: getValue(`aportacion${s.index}_porcentaje`)
-    }));
+    const sociosData = socios.map(s => {
+        const aportacionMonto = getValue(`aportacion${s.index}_monto`);
+        const partes = getValue(`aportacion${s.index}_partes`);
+        return {
+            index: s.index,
+            nombre: getValue(`socio${s.index}_nombre`),
+            nacionalidad: getValue(`socio${s.index}_nacionalidad`),
+            lugarNacimiento: getValue(`socio${s.index}_lugarNacimiento`),
+            fechaNacimiento: getValue(`socio${s.index}_fechaNacimiento`),
+            estadoCivil: getValue(`socio${s.index}_estadoCivil`),
+            ocupacion: getValue(`socio${s.index}_ocupacion`),
+            domicilio: getValue(`socio${s.index}_domicilio`),
+            identificacionTipo: getValue(`socio${s.index}_identificacionTipo`),
+            claveElector: getValue(`socio${s.index}_claveElector`),
+            institutoExpide: getValue(`socio${s.index}_institutoExpide`),
+            aportacion: aportacionMonto,
+            aportacionLetra: formatearConLetra(aportacionMonto, true),
+            partes: partes,
+            porcentaje: getValue(`aportacion${s.index}_porcentaje`)
+        };
+    });
 
     const sociosNombres = sociosData.map(s => s.nombre).join(', ');
     
-    // Generar descripción detallada para la sección de comparecencia
+    // Generar descripción detallada para la sección de comparecencia (solo nombres en el proemio, generales al final)
     const sociosDescripcion = sociosData.map(s => {
-        return `${s.nombre}, de nacionalidad ${s.nacionalidad}, nacido en ${s.lugarNacimiento}, el día ${s.fechaNacimiento}, de estado civil ${s.estadoCivil}, de ocupación ${s.ocupacion}, con Registro Federal de Contribuyentes ${s.rfc}, con CURP ${s.curp} y con domicilio en ${s.domicilio}`;
+        return `${s.nombre}, de nacionalidad ${s.nacionalidad}, nacido en ${s.lugarNacimiento}, el día ${s.fechaNacimiento}, de estado civil ${s.estadoCivil}, de ocupación ${s.ocupacion}, quien se identifica con ${s.identificacionTipo} número ${s.claveElector} expedida por ${s.institutoExpide} y con domicilio en ${s.domicilio}`;
     }).join('; ');
+
+    // Facultades Apoderado
+    const facultadesElements = document.querySelectorAll('input[name="facultades"]:checked');
+    const facultadesSeleccionadas = Array.from(facultadesElements).map(el => el.value);
+
+    let dia = isNaN(fecha.getDate()) ? 'XXX' : fecha.getDate();
+    let anio = isNaN(fecha.getFullYear()) ? '2025' : fecha.getFullYear();
 
     return {
         // Escritura
-        numeroEscritura: getValue('numeroEscritura'),
-        volumen: getValue('volumen'),
+        numeroEscritura: formatearConLetra(getValue('numeroEscritura')),
+        volumen: formatearConLetra(getValue('volumen')),
         notario: getValue('nombreNotario'),
 
         // Fecha
-        dia: isNaN(fecha.getDate()) ? 'XXX' : fecha.getDate(),
+        dia: formatearConLetra(dia),
         mes: isNaN(fecha.getMonth()) ? 'XXX' : meses[fecha.getMonth()],
-        anio: isNaN(fecha.getFullYear()) ? '2025' : fecha.getFullYear(),
+        anio: formatearConLetra(anio),
 
         // Sociedad
         denominacion: getValue('denominacion'),
         ciudad: getValue('ciudad'),
         estado: getValue('estado'),
-        domicilio: getValue('domicilio'),
-        duracion: getValue('duracion') === 'AÑOS' ? `${getValue('duracionAnios')} AÑOS` : 'INDEFINIDA',
+        duracion: getValue('duracion'),
         objetoSocial: getValue('objetoSocial'),
-        actividadesSecundarias: getValue('actividadesSecundarias'),
 
         // Capital
-        capitalFijo: getValue('capitalFijo'),
-        capitalVariable: getValue('capitalVariable'),
-        valorParte: getValue('valorParte'),
-        numeroPartes: getValue('numeroPartes'),
+        capitalFijo: formatearConLetra(getValue('capitalFijo'), true),
+        valorParte: formatearConLetra(getValue('valorParte'), true),
         formaAdministracion: getValue('formaAdministracion'),
 
         // Autorización
         denominacionAutorizada: getValue('denominacionAutorizada'),
         cud: getValue('cud'),
         fechaExpedicion: getValue('fechaExpedicion'),
-        numeroHojas: getValue('numeroHojas'),
+        numeroHojas: formatearConLetra(getValue('numeroHojas')),
         letraApendice: getValue('letraApendice'),
 
         // Administración
@@ -690,9 +771,7 @@ function collectAllData() {
         ocupacionApoderado: getValue('ocupacionApoderado'),
         domicilioApoderado: getValue('domicilioApoderado'),
         claveElectorApoderado: getValue('claveElectorApoderado'),
-
-        nombreComisario: getValue('nombreComisario'),
-        comisarioSocio: getValue('comisarioSocio'),
+        facultadesApoderado: facultadesSeleccionadas,
 
         // Socios
         socios: sociosData,
@@ -784,7 +863,7 @@ async function createWordDocument(data) {
                 new Paragraph({
                     children: [
                         new TextRun({
-                            text: `----- Los señores ${data.sociosDescripcion}, todos por su propio derecho y quienes dijeron: --------------------------- `,
+                            text: `----- Los señores ${data.sociosNombres}, todos por su propio derecho y quienes dijeron: --------------------------- `,
                             size: 22,
                         }),
                     ],
@@ -1558,55 +1637,7 @@ function generateArticulos(data) {
         spacing: { after: 200 },
     }));
 
-    // VIGILANCIA
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: 'VIGILANCIA',
-            bold: true,
-            size: 24,
-        })],
-        alignment: AlignmentType.CENTER,
-        spacing: { before: 200, after: 200 },
-    }));
 
-    // ARTÍCULO TRIGÉSIMO SEGUNDO
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- ARTÍCULO TRIGÉSIMO SEGUNDO.- La vigilancia de las operaciones sociales estará encomendada a uno o varios Comisarios, según determine la Asamblea de Socios, quienes podrán ser socios o personas ajenas a la Sociedad.`,
-            size: 22,
-        })],
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { after: 100 },
-    }));
-
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- El o los Comisarios continuarán en el desempeño de sus funciones aun cuando hubiere concluido el plazo para el cual hayan sido designados, mientras no se hagan nuevos nombramientos y los designados no tomen posesión del cargo.`,
-            size: 22,
-        })],
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { after: 200 },
-    }));
-
-    // ARTÍCULO TRIGÉSIMO TERCERO
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- ARTÍCULO TRIGÉSIMO TERCERO.No podrán ser nombradas ni desempeñar el cargo de Comisario las personas que sean cónyuges o tengan parentesco consanguíneo con el Gerente, en línea recta sin límite de grado o en colateral hasta el cuarto grado.`,
-            size: 22,
-        })],
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { after: 200 },
-    }));
-
-    // ARTÍCULO TRIGÉSIMO CUARTO
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- ARTÍCULO TRIGÉSIMO CUARTO.- El o los Comisarios tendrán las facultades y obligaciones necesarias para la vigilancia ilimitada de todas las operaciones de la Sociedad.`,
-            size: 22,
-        })],
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { after: 200 },
-    }));
 
     // EJERCICIOS SOCIALES
     paragraphs.push(new Paragraph({
@@ -1749,16 +1780,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}.`,
-            size: 22,
-        })],
-        alignment: AlignmentType.JUSTIFIED,
-        spacing: { after: 200 },
-    }));
-
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- CUARTO.- Los socios acuerdan nombrar como COMISARIO a ${data.nombreComisario}.`,
+            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas: ${data.facultadesApoderado.join(', ')}`,
             size: 22,
         })],
         alignment: AlignmentType.JUSTIFIED,
@@ -1789,17 +1811,6 @@ function generateArticulos(data) {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
                 text: `----- EL SEÑOR ${data.nombreGerente}, de nacionalidad ${data.nacionalidadGerente}, con domicilio en ${data.domicilioGerente}, quien desempeña el cargo de GERENTE de la sociedad.`,
-                size: 22,
-            })],
-            alignment: AlignmentType.JUSTIFIED,
-            spacing: { after: 200 },
-        }));
-    }
-
-    if (data.comisarioSocio === 'EXTERNO') {
-        paragraphs.push(new Paragraph({
-            children: [new TextRun({
-                text: `----- EL SEÑOR ${data.nombreComisario}, quien desempeña el cargo de COMISARIO de la sociedad.`,
                 size: 22,
             })],
             alignment: AlignmentType.JUSTIFIED,
@@ -1927,7 +1938,7 @@ function generateAportacionesWord(data) {
     socios.forEach((socio, index) => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${socio.nombre}: $${formatCurrency(socio.aportacion)} (${socio.porcentaje}%)`,
+                text: `----- ${socio.nombre}: ${socio.aportacionLetra} (${socio.porcentaje}%)`,
                 size: 22,
             })],
             alignment: AlignmentType.JUSTIFIED,
@@ -2035,14 +2046,10 @@ window.loadFromHistory = function(index) {
         setVal('denominacion', data.denominacion);
         setVal('ciudad', data.ciudad);
         setVal('estado', data.estado);
-        setVal('domicilio', data.domicilio);
-        if (data.duracion) setVal('duracionAnios', data.duracion.match(/\d+/)?.[0] || '');
+        setVal('duracion', data.duracion);
         setVal('objetoSocial', data.objetoSocial);
-        setVal('actividadesSecundarias', data.actividadesSecundarias);
         setVal('capitalFijo', data.capitalFijo);
-        setVal('capitalVariable', data.capitalVariable);
         setVal('valorParte', data.valorParte);
-        setVal('numeroPartes', data.numeroPartes);
         setVal('nombreNotario', data.notario);
         setVal('numeroEscritura', data.numeroEscritura);
         setVal('volumen', data.volumen);
@@ -2057,7 +2064,20 @@ window.loadFromHistory = function(index) {
         setVal('nombreApoderado', data.nombreApoderado);
         setVal('nacionalidadApoderado', data.nacionalidadApoderado);
         setVal('domicilioApoderado', data.domicilioApoderado);
-        setVal('nombreComisario', data.nombreComisario);
+        setVal('lugarNacimientoApoderado', data.lugarNacimientoApoderado);
+        setVal('fechaNacimientoApoderado', data.fechaNacimientoApoderado);
+        setVal('estadoCivilApoderado', data.estadoCivilApoderado);
+        setVal('ocupacionApoderado', data.ocupacionApoderado);
+        setVal('claveElectorApoderado', data.claveElectorApoderado);
+
+        // Limpiar checkboxes
+        document.querySelectorAll('input[name="facultades"]').forEach(cb => cb.checked = false);
+        if (data.facultadesApoderado && Array.isArray(data.facultadesApoderado)) {
+            data.facultadesApoderado.forEach(facultad => {
+                const cb = document.querySelector(`input[name="facultades"][value="${facultad}"]`);
+                if (cb) cb.checked = true;
+            });
+        }
 
         // 3. Recrear socios uno por uno
         if (data.socios && Array.isArray(data.socios)) {
@@ -2070,13 +2090,13 @@ window.loadFromHistory = function(index) {
                 setVal(`socio${currentIdx}_nombre`, s.nombre);
                 setVal(`socio${currentIdx}_nacionalidad`, s.nacionalidad);
                 setVal(`socio${currentIdx}_domicilio`, s.domicilio);
-                setVal(`socio${currentIdx}_rfc`, s.rfc);
-                setVal(`socio${currentIdx}_curp`, s.curp);
+                setVal(`socio${currentIdx}_identificacionTipo`, s.identificacionTipo);
+                setVal(`socio${currentIdx}_claveElector`, s.claveElector);
+                setVal(`socio${currentIdx}_institutoExpide`, s.institutoExpide);
                 setVal(`socio${currentIdx}_lugarNacimiento`, s.lugarNacimiento);
                 setVal(`socio${currentIdx}_fechaNacimiento`, s.fechaNacimiento);
                 setVal(`socio${currentIdx}_estadoCivil`, s.estadoCivil);
                 setVal(`socio${currentIdx}_ocupacion`, s.ocupacion);
-                setVal(`socio${currentIdx}_claveElector`, s.claveElector);
             });
         }
 
