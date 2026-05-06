@@ -7,6 +7,18 @@ let socios = [];
 let formData = {};
 let socioCounter = 0;
 
+const FACULTADES_MAP = {
+    'A': 'PODER GENERAL PARA PLEITOS Y COBRANZAS',
+    'B': 'PODER GENERAL PARA ACTOS DE ADMINISTRACIÓN',
+    'C': 'PODER LABORAL',
+    'D': 'PODER GENERAL',
+    'E': 'PODER GENERAL PARA ACTOS DE DOMINIO',
+    'F': 'PODER PARA SUSCRIBIR TÍTULOS Y OPERACIONES DE CRÉDITO',
+    'G': 'PODER CAMBIARIO',
+    'H': 'FACULTADES PARA CONFERIR PODERES',
+    'I': 'FACULTADES GENERALES'
+};
+
 // ===== INICIALIZACIÓN =====
 document.addEventListener('DOMContentLoaded', () => {
     initializeApp();
@@ -608,14 +620,12 @@ function generatePreview() {
             
             <p>Los comparecientes declaran, bajo formal protesta de decir verdad, que con anterioridad a la fecha de esta escritura pagaron en efectivo la totalidad de sus participaciones.</p>
             <p>SEGUNDO. Los socios acuerdan que la Sociedad se administre por un GERENTE, y para ocupar ese cargo nombran a ${hl(data.nombreGerente)}, a quien se le otorgan los poderes y facultades que se establecen en el artículo trigésimo primero de los estatutos sociales. ${data.eximeCaucion === 'SI' ? hl('Se exime al Gerente de la obligación de caucionar su gestión.') : hl('El Gerente deberá caucionar su gestión.')}</p>
-            <p>TERCERO. Los socios acuerdan nombrar como APODERADO LEGAL a ${hl(data.nombreApoderado)}. Facultades otorgadas: ${hl(data.facultadesApoderado.join(', '))}</p>
+            <p>TERCERO. Los socios acuerdan nombrar como APODERADO LEGAL a ${hl(data.nombreApoderado)}. Facultades otorgadas: ${hl(data.facultadesApoderadoDesc.join(', '))}</p>
             
             <h3 style="text-align: center;">GENERALES</h3>
             
             <p>${hl(data.sociosDescripcion)}</p>
 
-            <p>EL SEÑOR ${hl(data.nombreApoderado)}, quien dijo ser de nacionalidad ${hl(data.nacionalidadApoderado)}, haber nacido en ${hl(data.lugarNacimientoApoderado)}, el día ${hl(data.fechaNacimientoApoderado)}, de estado civil ${hl(data.estadoCivilApoderado)}, de ocupación ${hl(data.ocupacionApoderado)} y con domicilio en ${hl(data.domicilioApoderado)}, quien se identificó con credencial para votar con fotografía con clave de elector número ${hl(data.claveElectorApoderado)}.</p>
-            
             ${data.gerenteSocio === 'EXTERNO' ? `
             <p>EL SEÑOR ${hl(data.nombreGerente)}, de nacionalidad ${hl(data.nacionalidadGerente)}, con domicilio en ${hl(data.domicilioGerente)}, quien desempeña el cargo de GERENTE de la sociedad.</p>
             ` : ''}
@@ -775,6 +785,7 @@ function collectAllData() {
         domicilioApoderado: getValue('domicilioApoderado'),
         claveElectorApoderado: getValue('claveElectorApoderado'),
         facultadesApoderado: facultadesSeleccionadas,
+        facultadesApoderadoDesc: facultadesSeleccionadas.map(f => FACULTADES_MAP[f] || f),
 
         // Socios
         socios: sociosData,
@@ -1783,7 +1794,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas: ${data.facultadesApoderado.join(', ')}`,
+            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas: ${data.facultadesApoderadoDesc.join(', ')}`,
             size: 22,
         })],
         alignment: AlignmentType.JUSTIFIED,
@@ -1803,7 +1814,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- EL SEÑOR ${data.nombreApoderado}, quien dijo ser de nacionalidad ${data.nacionalidadApoderado}, haber nacido en ${data.lugarNacimientoApoderado}, el día ${data.fechaNacimientoApoderado}, de estado civil ${data.estadoCivilApoderado}, de ocupación ${data.ocupacionApoderado} y con domicilio en ${data.domicilioApoderado}, quien se identificó con credencial para votar con fotografía con clave de elector número ${data.claveElectorApoderado}.`,
+            text: `----- ${data.sociosDescripcion}`,
             size: 22,
         })],
         alignment: AlignmentType.JUSTIFIED,
