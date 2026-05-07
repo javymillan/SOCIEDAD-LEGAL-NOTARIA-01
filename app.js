@@ -45,9 +45,9 @@ function initializeApp() {
 }
 
 // ===== FUNCIONES AUXILIARES =====
-function numeroALetras(num) {
+function numeroALetras(num, forceCurrency = false) {
     if (num === null || isNaN(num) || num === undefined) return '';
-    const isCurrency = String(num).includes('.') || typeof num === 'string' && num.includes('$');
+    const isCurrency = forceCurrency || String(num).includes('.') || typeof num === 'string' && num.includes('$');
     const number = parseFloat(String(num).replace(/[^0-9.]/g, ''));
     if (isNaN(number)) return '';
 
@@ -115,11 +115,11 @@ function numeroALetras(num) {
 function formatearConLetra(valor, isCurrency = false) {
     if (!valor || valor === 'XXXXX' || valor === 'XXX') return valor;
     if (isCurrency) {
-        return `$${parseFloat(valor).toLocaleString('en-US', {minimumFractionDigits: 2})} (${numeroALetras(valor)})`;
+        return `$${parseFloat(valor).toLocaleString('en-US', {minimumFractionDigits: 2})} (${numeroALetras(valor, true)})`;
     }
     const num = parseFloat(valor);
     if (!isNaN(num)) {
-        return `${valor} (${numeroALetras(num)})`;
+        return `${valor} (${numeroALetras(num, false)})`;
     }
     return valor;
 }
