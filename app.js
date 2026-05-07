@@ -840,6 +840,23 @@ window.generateDocument = async function () {
 async function createWordDocument(data) {
     // Configurar tamaño de página Legal (21.6 x 35.6 cm)
     const doc = new Document({
+        styles: {
+            default: {
+                document: {
+                    run: {
+                        size: 18,
+                        font: "Arial",
+                    },
+                    paragraph: {
+                        spacing: {
+                            after: 0,
+                            before: 0,
+                            line: 240,
+                        },
+                    },
+                },
+            },
+        },
         sections: [{
             properties: {
                 page: {
