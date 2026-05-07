@@ -1550,7 +1550,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), conforme a lo siguiente:`),
+            text: dashFill(`----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), conforme a lo siguiente:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
