@@ -1,7 +1,7 @@
 import { Document, Packer, Paragraph, TextRun, AlignmentType, HeadingLevel, convertInchesToTwip } from 'docx';
 import { saveAs } from 'file-saver';
 
-// ===== ESTADO GLOBAL =====
+// ===== ESTADO GLOBAL (Trigger Deploy) =====
 let currentSection = 1;
 let socios = [];
 let formData = {};
