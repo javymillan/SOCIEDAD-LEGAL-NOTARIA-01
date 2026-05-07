@@ -837,6 +837,18 @@ window.generateDocument = async function () {
     }
 }
 
+/**
+ * dashFill: Rellena el final de un texto con guiones (-) hasta alcanzar el
+ * ancho de línea del documento (aprox. 100 caracteres en Arial 9pt, márgenes 1.5/1in).
+ * Esto simula el justificado con guiones propio de documentos notariales.
+ */
+function dashFill(text, lineWidth = 100) {
+    const trimmed = text.trimEnd();
+    if (trimmed.length >= lineWidth) return trimmed + '-';
+    const remaining = lineWidth - trimmed.length;
+    return trimmed + '-'.repeat(remaining);
+}
+
 async function createWordDocument(data) {
     // Configurar tamaño de página Legal (21.6 x 35.6 cm)
     const doc = new Document({
@@ -896,29 +908,26 @@ async function createWordDocument(data) {
                 new Paragraph({
                     children: [
                         new TextRun({
-                            text: `----- En la Ciudad de ${data.ciudad}, ${data.estado}, México, a los ${data.dia} días del mes de ${data.mes} del año ${data.anio}, ante mí, ${data.notario}, con ejercicio y residencia en esta Demarcación Notarial, COMPARECIERON: ----------------------------------------------`,
+                            text: dashFill(`----- En la Ciudad de ${data.ciudad}, ${data.estado}, México, a los ${data.dia} días del mes de ${data.mes} del año ${data.anio}, ante mí, ${data.notario}, con ejercicio y residencia en esta Demarcación Notarial, COMPARECIERON:`),
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.JUSTIFIED,
-                    spacing: { after: 200 } }),
+                    alignment: AlignmentType.JUSTIFIED }),
 
                 new Paragraph({
                     children: [
                         new TextRun({
-                            text: `----- Los señores ${data.sociosNombres}, todos por su propio derecho y quienes dijeron: --------------------------- `,
+                            text: dashFill(`----- Los señores ${data.sociosNombres}, todos por su propio derecho y quienes dijeron:`),
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.JUSTIFIED,
-                    spacing: { after: 200 } }),
+                    alignment: AlignmentType.JUSTIFIED }),
 
                 new Paragraph({
                     children: [
                         new TextRun({
-                            text: '----- Que vienen a constituir y constituyen una "SOCIEDAD DE RESPONSABILIDAD LIMITADA DE CAPITAL VARIABLE", conforme a la Ley General de Sociedades Mercantiles y en base a los siguientes:-------------------------',
+                            text: dashFill('----- Que vienen a constituir y constituyen una "SOCIEDAD DE RESPONSABILIDAD LIMITADA DE CAPITAL VARIABLE", conforme a la Ley General de Sociedades Mercantiles y en base a los siguientes:'),
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.JUSTIFIED,
-                    spacing: { after: 200 } }),
+                    alignment: AlignmentType.JUSTIFIED }),
 
                 // ANTECEDENTES
                 new Paragraph({
@@ -928,8 +937,7 @@ async function createWordDocument(data) {
                             bold: true,
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.CENTER,
-                    spacing: { before: 200, after: 200 } }),
+                    alignment: AlignmentType.CENTER }),
 
                 new Paragraph({
                     children: [
@@ -937,8 +945,7 @@ async function createWordDocument(data) {
                             text: `ÚNICO. Para la constitución de esta Sociedad, se solicitó y obtuvo la Autorización de Uso de la Denominación o Razón Social "${data.denominacionAutorizada}", expedida por la Secretaría de Economía, que consta únicamente al anverso de ${data.numeroHojas} hojas, con Clave Única de Documento (CUD) ${data.cud}, la cual se agrega al apéndice y al testimonio de esta escritura bajo la LETRA "${data.letraApendice}".- Conforme al artículo (22) veintidós del Reglamento para la Autorización de Uso de Denominaciones y Razones Sociales, el suscrito Notario explicó a los comparecientes el contenido y efectos de dicho precepto, así como las obligaciones establecidas en el mismo a cargo de la Sociedad que usará la denominación o razón social autorizada, y que consisten en las siguientes: “I. Responder por cualquier daño, perjuicio o afectación que pudiera causar el uso indebido o no autorizado de una Denominación o Razón Social otorgada mediante la presente Autorización, conforme a la Ley de Inversión Extranjera y al Reglamento para la Autorización de Uso de Denominaciones y Razones Sociales, y II. Proporcionar a la Secretaría de Economía la información y documentación que le sea requerida por escrito o a través del Sistema en relación con el uso de la Denominación o Razón Social otorgada mediante la presente Autorización, al momento de haberla reservado, durante el tiempo en que se encuentre en uso, y después de que se haya dado el Aviso de Liberación respecto de la misma.- Las obligaciones establecidas en las fracciones anteriores, deberán constar en el instrumento mediante el cual se formalice la constitución de la Sociedad o Asociación o el cambio de su Denominación o Razón Social.”`,
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.JUSTIFIED,
-                    spacing: { after: 200 } }),
+                    alignment: AlignmentType.JUSTIFIED }),
 
                 // CLÁUSULAS
                 new Paragraph({
@@ -948,17 +955,15 @@ async function createWordDocument(data) {
                             bold: true,
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.CENTER,
-                    spacing: { before: 200, after: 200 } }),
+                    alignment: AlignmentType.CENTER }),
 
                 new Paragraph({
                     children: [
                         new TextRun({
-                            text: `----- ÚNICA.Los señores ${data.sociosNombres}, constituyen una Sociedad de Responsabilidad Limitada de Capital Variable conforme a los siguientes: `,
+                            text: dashFill(`----- ÚNICA.Los señores ${data.sociosNombres}, constituyen una Sociedad de Responsabilidad Limitada de Capital Variable conforme a los siguientes:`),
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.JUSTIFIED,
-                    spacing: { after: 200 } }),
+                    alignment: AlignmentType.JUSTIFIED }),
 
                 // ESTATUTOS
                 new Paragraph({
@@ -968,8 +973,7 @@ async function createWordDocument(data) {
                             bold: true,
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.CENTER,
-                    spacing: { before: 200, after: 200 } }),
+                    alignment: AlignmentType.CENTER }),
 
                 new Paragraph({
                     children: [
@@ -978,8 +982,7 @@ async function createWordDocument(data) {
                             bold: true,
                             size: 18 }),
                     ],
-                    alignment: AlignmentType.CENTER,
-                    spacing: { before: 200, after: 200 } }),
+                    alignment: AlignmentType.CENTER }),
 
                 // Artículos (continúa con el resto del documento...)
                 ...generateArticulos(data),
@@ -1012,14 +1015,14 @@ function generateArticulos(data) {
     // ARTÍCULO TERCERO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO TERCERO.- DURACIÓN.- La duración de la Sociedad es ${data.duracion} a partir de la fecha de firma de esta escritura.--`,
+            text: dashFill(`----- ARTÍCULO TERCERO.- DURACIÓN.- La duración de la Sociedad es ${data.duracion} a partir de la fecha de firma de esta escritura.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
     // ARTÍCULO CUARTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO CUARTO.- OBJETO.- La Sociedad tendrá por objeto: `,
+            text: dashFill(`----- ARTÍCULO CUARTO.- OBJETO.- La Sociedad tendrá por objeto:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1040,7 +1043,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- En relación y para la consecución de dichos fines, la Sociedad podrá realizar cualquiera de los siguientes actos: `,
+            text: dashFill(`----- En relación y para la consecución de dichos fines, la Sociedad podrá realizar cualquiera de los siguientes actos:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1066,7 +1069,7 @@ function generateArticulos(data) {
     actividades.forEach(act => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${act} `,
+                text: dashFill(`----- ${act}`),
                 size: 18 })],
             alignment: AlignmentType.JUSTIFIED }));
     });
@@ -1074,7 +1077,7 @@ function generateArticulos(data) {
     // ARTÍCULO QUINTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO QUINTO.- NACIONALIDAD.- La Sociedad se constituye conforme a las leyes de los Estados Unidos Mexicanos, por lo que es de NACIONALIDAD MEXICANA.`,
+            text: dashFill(`----- ARTÍCULO QUINTO.- NACIONALIDAD.- La Sociedad se constituye conforme a las leyes de los Estados Unidos Mexicanos, por lo que es de NACIONALIDAD MEXICANA.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1087,19 +1090,19 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- I. Las partes sociales o derechos que adquieran de la Sociedad; `,
+            text: dashFill(`----- I. Las partes sociales o derechos que adquieran de la Sociedad;`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- II. Los bienes, derechos, concesiones, participaciones o intereses de los que sea titular la Sociedad; y, `,
+            text: dashFill(`----- II. Los bienes, derechos, concesiones, participaciones o intereses de los que sea titular la Sociedad; y,`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- III. Los derechos y obligaciones que deriven de los contratos en que sea parte la Sociedad.`,
+            text: dashFill(`----- III. Los derechos y obligaciones que deriven de los contratos en que sea parte la Sociedad.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1171,7 +1174,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- La transmisión de partes sociales por herencia no requerirá el consentimiento de los socios.`,
+            text: dashFill(`----- La transmisión de partes sociales por herencia no requerirá el consentimiento de los socios.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1186,7 +1189,7 @@ function generateArticulos(data) {
     // ARTÍCULO DECIMO PRIMERO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO DÉCIMO PRIMERO.- Para ser admitido como socio se requerirá el consentimiento de los socios que representen la mayoría del capital social.`,
+            text: dashFill(`----- ARTÍCULO DÉCIMO PRIMERO.- Para ser admitido como socio se requerirá el consentimiento de los socios que representen la mayoría del capital social.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1207,7 +1210,7 @@ function generateArticulos(data) {
     // ARTÍCULO DECIMO CUARTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO DÉCIMO CUARTO.- Los socios tendrán los siguientes derechos: `,
+            text: dashFill(`----- ARTÍCULO DÉCIMO CUARTO.- Los socios tendrán los siguientes derechos:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1221,7 +1224,7 @@ function generateArticulos(data) {
     derechos.forEach(der => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${der} `,
+                text: dashFill(`----- ${der}`),
                 size: 18 })],
             alignment: AlignmentType.JUSTIFIED }));
     });
@@ -1229,7 +1232,7 @@ function generateArticulos(data) {
     // ARTÍCULO DECIMO QUINTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO DÉCIMO QUINTO.- Los socios tendrán las siguientes obligaciones: `,
+            text: dashFill(`----- ARTÍCULO DÉCIMO QUINTO.- Los socios tendrán las siguientes obligaciones:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1244,7 +1247,7 @@ function generateArticulos(data) {
     obligaciones.forEach(obl => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${obl} `,
+                text: dashFill(`----- ${obl}`),
                 size: 18 })],
             alignment: AlignmentType.JUSTIFIED }));
     });
@@ -1273,7 +1276,7 @@ function generateArticulos(data) {
     // ARTÍCULO DECIMO SEPTIMO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO DÉCIMO SÉPTIMO.- Las Asambleas deberán celebrarse en el domicilio social, salvo caso fortuito o de fuerza mayor.`,
+            text: dashFill(`----- ARTÍCULO DÉCIMO SÉPTIMO.- Las Asambleas deberán celebrarse en el domicilio social, salvo caso fortuito o de fuerza mayor.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1313,14 +1316,14 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- No podrán ser apoderados los empleados de la Sociedad o los miembros de los órganos de administración o de vigilancia de la Sociedad.`,
+            text: dashFill(`----- No podrán ser apoderados los empleados de la Sociedad o los miembros de los órganos de administración o de vigilancia de la Sociedad.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
     // ARTÍCULO VIGÉSIMO SEGUNDO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO VIGÉSIMO SEGUNDO.Para asistir a las asambleas los socios deberán estar inscritos en el Libro de Registro de Socios.`,
+            text: dashFill(`----- ARTÍCULO VIGÉSIMO SEGUNDO.Para asistir a las asambleas los socios deberán estar inscritos en el Libro de Registro de Socios.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1334,7 +1337,7 @@ function generateArticulos(data) {
     // ARTÍCULO VIGÉSIMO CUARTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO VIGÉSIMO CUARTO.Las decisiones en asamblea serán tomadas conforme a lo establecido en el artículo 77(setenta y siete) de la mencionada Ley.`,
+            text: dashFill(`----- ARTÍCULO VIGÉSIMO CUARTO.Las decisiones en asamblea serán tomadas conforme a lo establecido en el artículo 77(setenta y siete) de la mencionada Ley.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1362,7 +1365,7 @@ function generateArticulos(data) {
     // ARTÍCULO VIGÉSIMO OCTAVO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO VIGÉSIMO OCTAVO.Los acuerdos tomados en contravención de estos estatutos serán nulos.`,
+            text: dashFill(`----- ARTÍCULO VIGÉSIMO OCTAVO.Los acuerdos tomados en contravención de estos estatutos serán nulos.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1377,7 +1380,7 @@ function generateArticulos(data) {
     // ARTÍCULO VIGÉSIMO NOVENO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO VIGÉSIMO NOVENO.- La administración de la Sociedad estará a cargo de uno o más Gerentes, según determine la Asamblea de Socios.`,
+            text: dashFill(`----- ARTÍCULO VIGÉSIMO NOVENO.- La administración de la Sociedad estará a cargo de uno o más Gerentes, según determine la Asamblea de Socios.`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1498,7 +1501,7 @@ function generateArticulos(data) {
     // ARTÍCULO TRIGÉSIMO SEXTO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO TRIGÉSIMO SEXTO.- La Sociedad se disolverá por las siguientes causas: `,
+            text: dashFill(`----- ARTÍCULO TRIGÉSIMO SEXTO.- La Sociedad se disolverá por las siguientes causas:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1513,7 +1516,7 @@ function generateArticulos(data) {
     causasDisolucion.forEach(causa => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${causa} `,
+                text: dashFill(`----- ${causa}`),
                 size: 18 })],
             alignment: AlignmentType.JUSTIFIED }));
     });
@@ -1541,13 +1544,13 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- Los socios reunidos en Asamblea General de Socios, aprueban por unanimidad las siguientes resoluciones: `,
+            text: dashFill(`----- Los socios reunidos en Asamblea General de Socios, aprueban por unanimidad las siguientes resoluciones:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), conforme a lo siguiente: `,
+            text: `----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), conforme a lo siguiente:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1568,7 +1571,7 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ${data.eximeCaucion === 'SI' ? 'Se exime al Gerente de la obligación de caucionar su gestión.' : 'El Gerente deberá caucionar su gestión.'}`,
+            text: dashFill(`----- ${data.eximeCaucion === 'SI' ? 'Se exime al Gerente de la obligación de caucionar su gestión.' : 'El Gerente deberá caucionar su gestión.'}`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1621,7 +1624,7 @@ function generateArticulos(data) {
     certificaciones.forEach(cert => {
         paragraphs.push(new Paragraph({
             children: [new TextRun({
-                text: `----- ${cert} `,
+                text: dashFill(`----- ${cert}`),
                 size: 18 })],
             alignment: AlignmentType.JUSTIFIED }));
     });
