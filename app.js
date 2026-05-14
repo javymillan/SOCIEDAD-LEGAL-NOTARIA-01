@@ -768,6 +768,7 @@ function collectAllData() {
 
         // Capital
         capitalFijo: formatearConLetra(getValue('capitalFijo'), true),
+        capitalFijoRaw: getValue('capitalFijo'),
         valorParte: formatearConLetra(getValue('valorParte'), true),
         formaAdministracion: getValue('formaAdministracion'),
 
@@ -1123,7 +1124,7 @@ function generateArticulos(data) {
     // ARTÍCULO SÉPTIMO
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- ARTÍCULO SÉPTIMO. El capital social es variable. El capital mínimo fijo sin derecho a retiro es de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), el cual estará representado por partes sociales, nominativas, íntegramente suscritas y pagadas.`,
+            text: `----- ARTÍCULO SÉPTIMO. El capital social es variable. El capital mínimo fijo sin derecho a retiro es de $${formatCurrency(data.capitalFijoRaw)} (MONEDA NACIONAL), el cual estará representado por partes sociales, nominativas, íntegramente suscritas y pagadas.`,
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
@@ -1550,12 +1551,13 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: dashFill(`----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijo)} (MONEDA NACIONAL), conforme a lo siguiente:`),
+            text: dashFill(`----- PRIMERO.- La parte mínima fija del capital social se constituye por la cantidad de $${formatCurrency(data.capitalFijoRaw)} (MONEDA NACIONAL), conforme a lo siguiente:`),
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
-    // Tabla de aportaciones (simplificada para Word)
-    paragraphs.push(...generateAportacionesWord(data));
+    // Tabla de socios/aportaciones en Word
+    const tablaAportaciones = generateAportacionesWord(data);
+    tablaAportaciones.forEach(item => paragraphs.push(item));
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
@@ -1577,9 +1579,55 @@ function generateArticulos(data) {
 
     paragraphs.push(new Paragraph({
         children: [new TextRun({
-            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas: ${data.facultadesApoderadoDesc.join(', ')}`,
+            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas:`,
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
+
+    const facultadesTextMap = {
+        'A': [
+            `----- A).- PODER GENERAL PARA PLEITOS Y COBRANZAS.- Representar a la Sociedad ante toda clase de personas físicas y morales y ante toda clase de autoridades ya sean estas Administrativas, Judiciales, Militares, Fiscales, del trabajo o de cualquier otra índole, ya fueren Federal, Estatal, Municipal y del Distrito Federal, con todas las facultades generales PARA PLEITOS Y COBRANZAS, y aún las especiales que requieran poder o cláusula especial conforme a cualquier ley, sin limitación alguna con facultades para interponer cualquier recurso, en toda clase de juicios tanto en lo principal, como en sus incidentes, aún el extraordinario de amparo, directo o indirecto y desistirse de él, presentar querellas o denuncias, ratificarlas y desistirse de ellas, y constituirse en parte civil cuando proceda la reparación del daño, en los términos del Primer Párrafo del Artículo 2, 554 (dos mil quinientos cincuenta y cuatro) del Código Civil Federal; Su correlativo el 2, 831 (dos mil ochocientos treinta y uno) del Código Civil vigente en el Estado de Sonora, y de los concordantes de ambos preceptos de los mismos ordenamientos de los diversos Estados de la República Mexicana, incluyéndose también las facultades enumeradas por los Artículos 2587 (dos mil quinientos ochenta y siete) del primero de dichos Códigos, 2868 (dos mil ochocientos sesenta y ocho) del segundo y los concordantes de los terceros.- En forma enunciativa y no limitativa el podrá: I.- Promover y desistirse de toda clase de acciones, recursos, juicios y procedimientos aún el de amparo.- II.- Transigir.- III.- Articular y absolver posiciones.- IV.- Comprometer en árbitros.- V.- Recusar.- VI.- Recibir pagos y recibir cesión de bienes.- VII.- Firmar todo tipo de contratos o convenios.- VIII.- Formular y ratificar denuncias y querellas del Orden Penal y desistirse de ellas, otorgar el perdón en su caso y constituirse en coadyuvante del Ministerio Público.- IX.- Interponer juicios de amparo y desistirse de ellos.- X.- Gestionar por conducto de las Autoridades correspondientes la reparación del daño provenientes de delitos; intervenir en los procedimientos respectivos y otorgar el perdón cuando lo estime conveniente.- XI.- Exigir a nombre de la Sociedad el cumplimiento de las obligaciones contraídas por terceros.- XII.- Ejercitar el poder ante la Secretaría del Trabajo y Previsión Social, ante el Instituto Mexicano del Seguro Social, SECRETARÍA DE HACIENDA Y CRÉDITO PÚBLICO y ante toda clase de TRIBUNALES JUDICIALES FEDERALES O ESTATALES; XIII.- Promover remates, como postor, realizar pujas, mejorar posturas, pedir la adjudicación de bienes, comparecer o participar en toda clase de concursos o licitaciones y realizar cualquier acto y en cualquier juicio o procedimiento, actuando en nombre y representación de la Sociedad. -- - `,
+            `----- El apoderado o apoderados podrán firmar todo tipo de contratos o convenios o cualquier otro documento que fuere necesario y podrán participar en cualquier licitación municipal, estatal o federal o por el sistema de Compranet, en asuntos relacionados con la presente Sociedad.--------------- `
+        ],
+        'B': [
+            `----- B).- PODER GENERAL PARA ACTOS DE ADMINISTRACIÓN.- Administrar los bienes y dirigir los negocios de la Sociedad, actuando como apoderado GENERAL PARA ACTOS DE ADMINISTRACIÓN en términos de lo dispuesto por el II (segundo) párrafo del Artículo 2, 831 (dos mil ochocientos treinta y uno) del Código Civil vigente en el Estado de Sonora; II (segundo) párrafo del Artículo 2, 554 (dos mil quinientos cincuenta y cuatro) del Código Civil Federal y sus correlativos, los Códigos Civiles de los Estados de la República Mexicana.- En general, tendrá facultades para realizar cualquier acto de administración sea cual fuere su nombre, por lo que representará a la Sociedad ante toda clase de personas, autoridades, organismos, Instituciones de Crédito, Organismo Descentralizados, empresas de participación estatal, etcétera.- Podrá nombrar y remover libremente a los funcionarios y empleados de la Sociedad, otorgarles y modificarles facultades, fijar emolumentos, podrá establecer oficinas, departamentos, sucursales y agencias de la Sociedad, así como suprimirlas y movilizarlas.- Proponer a la Asamblea de accionistas las resoluciones a que juzguen pertinentes y provechosas para los fines de la Sociedad.- Ejercitar la dirección, manejo y control de los asuntos de la Sociedad y de todas sus propiedades, celebrando y vigilando el cumplimiento de toda clase de actos, convenios y contratos que fueren necesarios. -- - `,
+            `----- EL PODER GENERAL PARA ACTOS DE ADMINISTRACIÓN COMPRENDE FACULTADES PARA QUE PUEDA LLEVAR TRAMITES FISCALES O ADMINISTRATIVOS QUE FUERAN NECESARIOS ANTE LA SECRETARIA DE HACIENDA Y CRÉDITO PÚBLICO, ANTE EL SERVICIO DE ADMINISTRACIÓN TRIBUTARIA(SAT), DAR DE ALTA A LA PERSONA MORAL, SOLICITAR LA FIRMA ELECTRÓNICA AVANZADA(FIEL), SOLICITAR DEVOLUCIONES DE IVA Y OTRAS QUE FUEREN NECESARIO, ANTE EL INSTITUTO MEXICANO DEL SEGURO SOCIAL Y / O CUALQUIERA OTRA DEPENDENCIA QUE FUERE NECESARIA. -- - `
+        ],
+        'C': [
+            `----- C).- PODER LABORAL Podrá ser ejercitado ante las autoridades del trabajo y servicios sociales que se señalan en el Artículo 523(quinientos veintitrés) de la Ley Federal del Trabajo, así como ante las juntas locales y federales de conciliación y arbitraje; confiriéndose a los profesionistas mencionados las facultades más amplias que en derecho procedan para intervenir en representación de la sociedad en la totalidad del proceso conciliatorio y en la totalidad del proceso de juicio instituido bajo el modelo anterior a la reforma laboral publicada el 01 de mayo de 2019 en todas sus etapas, a la audiencia prevista por el artículo 873 de la ley federal del trabajo de conciliación, demanda y excepciones, a la audiencia prevista por el artículo 880 de ofrecimiento y admisión de pruebas, así como a todas y cada una de las diligencias, desahogos y etapas del juicio laboral anterior a la reforma mencionada; así mismo, se confiere a los profesionistas mencionados las más amplias facultades para que intervengan en representación de la sociedad en la totalidad del proceso conciliatorio ante los centros de conciliación, locales y federales, así como a la totalidad del proceso de juicio instituido bajo el nuevo modelo derivado de la reforma laboral publicada en el diario oficial de la federación el 01 de mayo de 2019, a fin de que representen a la sociedad tanto en la audiencia preliminar prevista por los artículos 873 - E, 873 - F y 873 - G de la ley federal del trabajo, así como a la audiencia de juicio prevista por los artículos 873 - H, 873 - I, 873 - J, 873 - K y demás relativos y aplicables, con amplias facultades para realizar defensas y excepciones, presentar replicas, contrarréplicas, ofrecer y desahogar pruebas, proponer y absolver posiciones, promover cualquier tipo de acción, excepción, defensa, aclaración, incidente, recurso, recusación, proponer arreglos conciliatorios, para tomar decisiones y para suscribir convenios en términos del invocado dispositivo legal; así también podrán señalar domicilios para recibir notificaciones en términos de lo dispuesto por el Artículo 739(setecientos treinta y nueve) de la Ley Federal del Trabajo.Poder General para llevar a cabo actos de rescisión en términos de los dispuesto por los Artículos 46(cuarenta y seis) y 47(cuarenta y siete) de la Ley Federal del Trabajo. -- - `
+        ],
+        'D': [
+            `----- D).- PODER GENERAL.- Podrán llevar a cabo actos de rescisión en términos de lo dispuesto por los Artículos 46 y 47 (cuarenta y seis y cuarenta y siete) de la Ley Federal del Trabajo. -- - `
+        ],
+        'E': [
+            `----- E).- PODER GENERAL PARA ACTOS DE DOMINIO en los más amplios términos del párrafo Tercero del Artículo 2, 831 (dos mil ochocientos treinta y uno) del Código Civil vigente en el Estado de Sonora y sus correlativos el 2, 554 (dos mil quinientos cincuenta y cuatro) del Código Civil Federal y sus correlativos y concordantes de los Códigos Civiles de los Estados de la República Mexicana, actos como vender, gravar, pignorar, hipotecar, ceder, donar, dar en prenda, fianza, etcétera, los bienes de la Sociedad.- Celebrar cualquier acto de riguroso dominio. -- - `
+        ],
+        'F': [
+            `----- F).- PODER PARA SUSCRIBIR TÍTULOS Y OPERACIONES DE CRÉDITO.- Podrá realizar y celebrar cualquier tipo de actos, contratos y operaciones de créditos, pero en asuntos estrictamente relacionados con la Sociedad, tales como librar, aceptar, suscribir, girar, avalar, endosar, descontar, títulos de crédito etcétera, incluyendo cheques, en términos del Artículo 9 (noveno) de la Ley General de Títulos y de Operaciones de Créditos. -- - `
+        ],
+        'G': [
+            `----- G).- PODER CAMBIARIO.- Para ejercerse en toda la extensión de la República Mexicana y en el extranjero, pero tan amplio como en derecho sea necesario, para emitir, aceptar, girar, librar, endosar, certificar, descontar, efectuar y realizar en cualquier forma de suscripción, títulos y operaciones de crédito, títulos valor con o sin garantía e instrumentos de pago, así como todo tipo de convenios, contratos, negocios, actos jurídicos y operaciones que estén relacionadas directa o indirectamente con los mismos, en los términos más amplios que establecen los artículos 9º. (noveno), fracción I (primera), párrafo final, 85 (ochenta y cinco), 174 (ciento setenta y cuatro) y 196 (ciento noventa y seis) de la Ley General de Títulos y Operaciones de Crédito; afianzar, coafianzar, y en general garantizar en nombre de la Sociedad Poderdante en forma individual, solidaria, subsidiaria o mancomunada, según corresponda a los intereses de la Sociedad Poderdante, con o sin contraprestación, incluso con prenda, hipoteca, fideicomiso o bajo cualquier otra forma de garantía permitida por la ley, obligaciones a cargo de la Sociedad Poderdante, pudiendo por lo tanto suscribir títulos de crédito, convenios, contratos y demás documentos que fueren necesarios o convenientes para el otorgamiento de dichas garantías; se incluyen las facultades de abrir y firmar cuentas de cheques en las instituciones bancarias, de disponer de sus fondos y las de cancelación de las mismas, en su caso, así como para que autorice a terceras personas a realizar los actos dentro de los que al propio Gerente o al órgano de administración en su caso, se le otorgan y confieren, de depósito en otras instituciones u organizaciones auxiliares de crédito y, de obligar a la Sociedad Mandante, en cualquier forma que legalmente estime necesaria dentro de las operaciones propias de sus autorizaciones, y en forma enunciativa y no limitativa podrá además realizar toda clase de operaciones con instituciones de crédito, nacionales y extranjeras, con intermediarios del mercado de valores, organizaciones auxiliares del crédito, sociedades de inversión, casas de bolsa, para disponer o depositar fondos, títulos de crédito o títulos de valor, desde luego dentro de las atribuciones que por este instrumento le otorga el órgano supremo de la Sociedad. -- - `
+        ],
+        'H': [
+            `----- H).- FACULTADES PARA CONFERIR PODERES generales o especiales, mandatos judiciales o facultades administrativas, y revocar en cualquier tiempo tales poderes; así como para sustituir o delegar en cualquier persona, sean o no accionistas, las facultades que le son conferidas, reservándose su ejercicio. -- - `
+        ],
+        'I': [
+            `----- I).- Llevar a cabo todos los actos, operaciones y negocios de la Sociedad y celebrar todos los contratos y convenios y suscribir toda clase de documentos y escrituras que considere convenientes para el mejor desarrollo del objeto social. -- - `
+        ]
+    };
+
+    if (data.facultadesApoderado && data.facultadesApoderado.length > 0) {
+        data.facultadesApoderado.forEach(facultad => {
+            if (facultadesTextMap[facultad]) {
+                facultadesTextMap[facultad].forEach(parrafoText => {
+                    paragraphs.push(new Paragraph({
+                        children: [new TextRun({
+                            text: parrafoText,
+                            size: 18 })],
+                        alignment: AlignmentType.JUSTIFIED }));
+                });
+            }
+        });
+    }
 
     // GENERALES
     paragraphs.push(new Paragraph({
