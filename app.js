@@ -1748,18 +1748,65 @@ function generateFirmas(data) {
 }
 
 function generateAportacionesWord(data) {
-    const paragraphs = [];
     const socios = data.socios || [];
 
-    socios.forEach((socio, index) => {
-        paragraphs.push(new Paragraph({
-            children: [new TextRun({
-                text: `----- ${socio.nombre}: ${socio.aportacionLetra} (${socio.porcentaje}%)`,
-                size: 18 })],
-            alignment: AlignmentType.JUSTIFIED }));
+    // Estilos de borde para todas las celdas
+    const cellBorder = {
+        top:    { style: BorderStyle.SINGLE, size: 4, color: '999999' },
+        bottom: { style: BorderStyle.SINGLE, size: 4, color: '999999' },
+        left:   { style: BorderStyle.SINGLE, size: 4, color: '999999' },
+        right:  { style: BorderStyle.SINGLE, size: 4, color: '999999' },
+    };
+
+    // Función auxiliar para crear celda de encabezado
+    const headerCell = (text, width) => new TableCell({
+        borders: cellBorder,
+        shading: { type: ShadingType.SOLID, color: '2C3E6B', fill: '2C3E6B' },
+        width: { size: width, type: WidthType.DXA },
+        children: [new Paragraph({
+            children: [new TextRun({ text, bold: true, size: 16, color: 'FFFFFF' })],
+            alignment: AlignmentType.CENTER,
+        })],
     });
 
-    return paragraphs;
+    // Función auxiliar para crear celda de dato
+    const dataCell = (text, width, align = AlignmentType.LEFT) => new TableCell({
+        borders: cellBorder,
+        width: { size: width, type: WidthType.DXA },
+        children: [new Paragraph({
+            children: [new TextRun({ text, size: 16 })],
+            alignment: align,
+        })],
+    });
+
+    // Anchos de columnas (en twips): Socio=3500, Monto=3500, Partes=1000, %=1000
+    const table = new Table({
+        width: { size: 9000, type: WidthType.DXA },
+        columnWidths: [3500, 3500, 1000, 1000],
+        rows: [
+            // Fila de encabezados
+            new TableRow({
+                tableHeader: true,
+                children: [
+                    headerCell('Socio',  3500),
+                    headerCell('Monto',  3500),
+                    headerCell('Partes', 1000),
+                    headerCell('%',      1000),
+                ],
+            }),
+            // Filas de datos
+            ...socios.map(socio => new TableRow({
+                children: [
+                    dataCell(socio.nombre,        3500),
+                    dataCell(socio.aportacionLetra, 3500),
+                    dataCell(String(socio.partes || 1), 1000, AlignmentType.CENTER),
+                    dataCell(`${socio.porcentaje}%`, 1000, AlignmentType.CENTER),
+                ],
+            })),
+        ],
+    });
+
+    return [table];
 }
 
 // ===========================
