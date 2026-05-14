@@ -1577,12 +1577,6 @@ function generateArticulos(data) {
             size: 18 })],
         alignment: AlignmentType.JUSTIFIED }));
 
-    paragraphs.push(new Paragraph({
-        children: [new TextRun({
-            text: `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas:`,
-            size: 18 })],
-        alignment: AlignmentType.JUSTIFIED }));
-
     const facultadesTextMap = {
         'A': [
             `----- A).- PODER GENERAL PARA PLEITOS Y COBRANZAS.- Representar a la Sociedad ante toda clase de personas físicas y morales y ante toda clase de autoridades ya sean estas Administrativas, Judiciales, Militares, Fiscales, del trabajo o de cualquier otra índole, ya fueren Federal, Estatal, Municipal y del Distrito Federal, con todas las facultades generales PARA PLEITOS Y COBRANZAS, y aún las especiales que requieran poder o cláusula especial conforme a cualquier ley, sin limitación alguna con facultades para interponer cualquier recurso, en toda clase de juicios tanto en lo principal, como en sus incidentes, aún el extraordinario de amparo, directo o indirecto y desistirse de él, presentar querellas o denuncias, ratificarlas y desistirse de ellas, y constituirse en parte civil cuando proceda la reparación del daño, en los términos del Primer Párrafo del Artículo 2, 554 (dos mil quinientos cincuenta y cuatro) del Código Civil Federal; Su correlativo el 2, 831 (dos mil ochocientos treinta y uno) del Código Civil vigente en el Estado de Sonora, y de los concordantes de ambos preceptos de los mismos ordenamientos de los diversos Estados de la República Mexicana, incluyéndose también las facultades enumeradas por los Artículos 2587 (dos mil quinientos ochenta y siete) del primero de dichos Códigos, 2868 (dos mil ochocientos sesenta y ocho) del segundo y los concordantes de los terceros.- En forma enunciativa y no limitativa el podrá: I.- Promover y desistirse de toda clase de acciones, recursos, juicios y procedimientos aún el de amparo.- II.- Transigir.- III.- Articular y absolver posiciones.- IV.- Comprometer en árbitros.- V.- Recusar.- VI.- Recibir pagos y recibir cesión de bienes.- VII.- Firmar todo tipo de contratos o convenios.- VIII.- Formular y ratificar denuncias y querellas del Orden Penal y desistirse de ellas, otorgar el perdón en su caso y constituirse en coadyuvante del Ministerio Público.- IX.- Interponer juicios de amparo y desistirse de ellos.- X.- Gestionar por conducto de las Autoridades correspondientes la reparación del daño provenientes de delitos; intervenir en los procedimientos respectivos y otorgar el perdón cuando lo estime conveniente.- XI.- Exigir a nombre de la Sociedad el cumplimiento de las obligaciones contraídas por terceros.- XII.- Ejercitar el poder ante la Secretaría del Trabajo y Previsión Social, ante el Instituto Mexicano del Seguro Social, SECRETARÍA DE HACIENDA Y CRÉDITO PÚBLICO y ante toda clase de TRIBUNALES JUDICIALES FEDERALES O ESTATALES; XIII.- Promover remates, como postor, realizar pujas, mejorar posturas, pedir la adjudicación de bienes, comparecer o participar en toda clase de concursos o licitaciones y realizar cualquier acto y en cualquier juicio o procedimiento, actuando en nombre y representación de la Sociedad. -- - `,
@@ -1602,7 +1596,7 @@ function generateArticulos(data) {
             `----- E).- PODER GENERAL PARA ACTOS DE DOMINIO en los más amplios términos del párrafo Tercero del Artículo 2, 831 (dos mil ochocientos treinta y uno) del Código Civil vigente en el Estado de Sonora y sus correlativos el 2, 554 (dos mil quinientos cincuenta y cuatro) del Código Civil Federal y sus correlativos y concordantes de los Códigos Civiles de los Estados de la República Mexicana, actos como vender, gravar, pignorar, hipotecar, ceder, donar, dar en prenda, fianza, etcétera, los bienes de la Sociedad.- Celebrar cualquier acto de riguroso dominio. -- - `
         ],
         'F': [
-            `----- F).- PODER PARA SUSCRIBIR TÍTULOS Y OPERACIONES DE CRÉDITO.- Podrá realizar y celebrar cualquier tipo de actos, contratos y operaciones de créditos, pero en asuntos estrictamente relacionados con la Sociedad, tales como librar, aceptar, suscribir, girar, avalar, endosar, descontar, títulos de crédito etcétera, incluyendo cheques, en términos del Artículo 9 (noveno) de la Ley General de Títulos y de Operaciones de Créditos. -- - `
+            `----- F).- PODER PARA SUSCRIBIR TÍTULOS Y OPERACIONES DE CRÉDITO.- Podrá realizar y celebrar cualquier tipo de actos, contratos y operaciones de créditos, pero en asuntos estrictamente relacionados con la Sociedad, tales como librar, aceptar, suscribir, girar, avalar, endosar, descontar, titles de crédito etcétera, incluyendo cheques, en términos del Artículo 9 (noveno) de la Ley General de Títulos y de Operaciones de Créditos. -- - `
         ],
         'G': [
             `----- G).- PODER CAMBIARIO.- Para ejercerse en toda la extensión de la República Mexicana y en el extranjero, pero tan amplio como en derecho sea necesario, para emitir, aceptar, girar, librar, endosar, certificar, descontar, efectuar y realizar en cualquier forma de suscripción, títulos y operaciones de crédito, títulos valor con o sin garantía e instrumentos de pago, así como todo tipo de convenios, contratos, negocios, actos jurídicos y operaciones que estén relacionadas directa o indirectamente con los mismos, en los términos más amplios que establecen los artículos 9º. (noveno), fracción I (primera), párrafo final, 85 (ochenta y cinco), 174 (ciento setenta y cuatro) y 196 (ciento noventa y seis) de la Ley General de Títulos y Operaciones de Crédito; afianzar, coafianzar, y en general garantizar en nombre de la Sociedad Poderdante en forma individual, solidaria, subsidiaria o mancomunada, según corresponda a los intereses de la Sociedad Poderdante, con o sin contraprestación, incluso con prenda, hipoteca, fideicomiso o bajo cualquier otra forma de garantía permitida por la ley, obligaciones a cargo de la Sociedad Poderdante, pudiendo por lo tanto suscribir títulos de crédito, convenios, contratos y demás documentos que fueren necesarios o convenientes para el otorgamiento de dichas garantías; se incluyen las facultades de abrir y firmar cuentas de cheques en las instituciones bancarias, de disponer de sus fondos y las de cancelación de las mismas, en su caso, así como para que autorice a terceras personas a realizar los actos dentro de los que al propio Gerente o al órgano de administración en su caso, se le otorgan y confieren, de depósito en otras instituciones u organizaciones auxiliares de crédito y, de obligar a la Sociedad Mandante, en cualquier forma que legalmente estime necesaria dentro de las operaciones propias de sus autorizaciones, y en forma enunciativa y no limitativa podrá además realizar toda clase de operaciones con instituciones de crédito, nacionales y extranjeras, con intermediarios del mercado de valores, organizaciones auxiliares del crédito, sociedades de inversión, casas de bolsa, para disponer o depositar fondos, títulos de crédito o títulos de valor, desde luego dentro de las atribuciones que por este instrumento le otorga el órgano supremo de la Sociedad. -- - `
@@ -1615,19 +1609,26 @@ function generateArticulos(data) {
         ]
     };
 
+    let facultadesStr = '';
     if (data.facultadesApoderado && data.facultadesApoderado.length > 0) {
         data.facultadesApoderado.forEach(facultad => {
             if (facultadesTextMap[facultad]) {
                 facultadesTextMap[facultad].forEach(parrafoText => {
-                    paragraphs.push(new Paragraph({
-                        children: [new TextRun({
-                            text: parrafoText,
-                            size: 18 })],
-                        alignment: AlignmentType.JUSTIFIED }));
+                    // Quitamos los guiones iniciales y finales para unirlo en un solo string fluido
+                    let cleanText = parrafoText.replace(/^-----+ /, '').replace(/ -- - $/, '').replace(/--------------- $/, '').trim();
+                    facultadesStr += `  ${cleanText}`;
                 });
             }
         });
     }
+
+    let terceroText = `----- TERCERO.- Los socios acuerdan nombrar como APODERADO LEGAL a ${data.nombreApoderado}. Facultades otorgadas:${facultadesStr}`;
+
+    paragraphs.push(new Paragraph({
+        children: [new TextRun({
+            text: terceroText,
+            size: 18 })],
+        alignment: AlignmentType.JUSTIFIED }));
 
     // GENERALES
     paragraphs.push(new Paragraph({
@@ -1747,64 +1748,18 @@ function generateFirmas(data) {
 }
 
 function generateAportacionesWord(data) {
+    const paragraphs = [];
     const socios = data.socios || [];
 
-    // Estilos de borde para todas las celdas
-    const cellBorder = {
-        top:    { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-        bottom: { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-        left:   { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-        right:  { style: BorderStyle.SINGLE, size: 4, color: '999999' },
-    };
-
-    // Función auxiliar para crear celda de encabezado
-    const headerCell = (text, width) => new TableCell({
-        borders: cellBorder,
-        shading: { type: ShadingType.SOLID, color: '2C3E6B', fill: '2C3E6B' },
-        width: { size: width, type: WidthType.DXA },
-        children: [new Paragraph({
-            children: [new TextRun({ text, bold: true, size: 16, color: 'FFFFFF' })],
-            alignment: AlignmentType.CENTER,
-        })],
+    socios.forEach((socio, index) => {
+        paragraphs.push(new Paragraph({
+            children: [new TextRun({
+                text: `----- ${socio.nombre}: ${socio.aportacionLetra} (${socio.porcentaje}%)`,
+                size: 18 })],
+            alignment: AlignmentType.JUSTIFIED }));
     });
 
-    // Función auxiliar para crear celda de dato
-    const dataCell = (text, width, align = AlignmentType.LEFT) => new TableCell({
-        borders: cellBorder,
-        width: { size: width, type: WidthType.DXA },
-        children: [new Paragraph({
-            children: [new TextRun({ text, size: 16 })],
-            alignment: align,
-        })],
-    });
-
-    // Anchos de columnas (en twips): Socio=3500, Monto=3500, Partes=1000, %=1000
-    const table = new Table({
-        width: { size: 9000, type: WidthType.DXA },
-        rows: [
-            // Fila de encabezados
-            new TableRow({
-                tableHeader: true,
-                children: [
-                    headerCell('Socio',  3500),
-                    headerCell('Monto',  3500),
-                    headerCell('Partes', 1000),
-                    headerCell('%',      1000),
-                ],
-            }),
-            // Filas de datos
-            ...socios.map(socio => new TableRow({
-                children: [
-                    dataCell(socio.nombre,        3500),
-                    dataCell(socio.aportacionLetra, 3500),
-                    dataCell(String(socio.partes || 1), 1000, AlignmentType.CENTER),
-                    dataCell(`${socio.porcentaje}%`, 1000, AlignmentType.CENTER),
-                ],
-            })),
-        ],
-    });
-
-    return [table];
+    return paragraphs;
 }
 
 // ===========================
